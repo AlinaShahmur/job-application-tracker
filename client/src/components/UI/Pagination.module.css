@@ -1,0 +1,33 @@
+.pagination {
+    text-align: center;
+}
+
+.btn-num {
+    color:"#37a67d";
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    background-color: #ffffff;
+}
+
+.btn-num .active  {
+   color: #37a67d;
+   font-weight: 800;
+} 
+
+
+
+.side-btn {
+    color:"#37a67d";
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    background-color: #ffffff;
+}
+
+
+.side-btn button span {
+    color:"#37a67d";
+    width: 20px;
+    height: 20px;
+}

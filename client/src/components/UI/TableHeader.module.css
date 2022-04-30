@@ -1,0 +1,18 @@
+.table-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border: 1px solid #f0f0f0;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 2px;
+    font-weight: 800;
+}
+.table-header div {
+    flex-basis: 25%;
+    text-align: center;
+}
+
+.sort-btn {
+    cursor: pointer;
+}

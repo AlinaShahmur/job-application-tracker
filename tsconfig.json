@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "module" : "commonjs",
+      "esModuleInterop": true,
+      "target":"es6",
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "moduleResolution": "node",
+      "outDir": "dist",
+      "sourceMap": true
+    },
+    "include": ["src/**/*", "main.ts"],
+    "exclude": ["node_modules", "**/*.spec.ts"]
+  }
