@@ -1,7 +1,9 @@
-function appReducer(state: any = {applications: [], currentPage: 1}, action: any) {
+function appReducer(state: any = {applications: [], currentPage: 1, processes:[]}, action: any) {
     switch(action.type) {
         case "PAGE_LOAD":
             return {...state, applications: action.payload}
+        case 'LOAD_PROCESSES':
+            return {...state, processes: action.payload}
         // case 'ADD':
         //     return {...state, cars: [...state.cars, action.payload]}
         // case 'DELETE':
