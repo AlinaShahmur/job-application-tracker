@@ -3,14 +3,15 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Applications from './components/Applications/AllApplications/Applications';
+import Applications from './components/Applications/Applications';
 import { createRoot } from "react-dom/client"
-import Application from './components/Applications/AllApplications/Application';
-
+import Application from './components/Applications/Application';
 import {createStore} from 'redux'
 import {Provider} from 'react-redux'
 import appReducer from './store/appReducer'
 import Auth0ProviderWithHistory from './auth/auth0-provider-with-history';
+import ProtectedRoute from './auth/protected-route';
+import Header from './components/UI/Header';
 
 const rootElement:any = document.getElementById("root");
 const root = createRoot(rootElement);
@@ -20,10 +21,11 @@ root.render(
   <Provider store={appStore}>
     <BrowserRouter>
       <Auth0ProviderWithHistory>
+        <Header/>
           <Routes>
-            <Route path='/' element = {<App/>}></Route>
-            <Route path = '/applications' element = {<Applications/>}></Route>
-            <Route path = '/applications/:id' element = {<Application/>}></Route>
+            <Route path = '/' element = {<ProtectedRoute component = {App}/>}></Route>
+            <Route path = '/:processId/applications' element = {<ProtectedRoute component = {Applications}/>}/>
+            <Route path = '/:processId/applications/:id' element = {<ProtectedRoute component = {Application}/>}/>
           </Routes>
       </Auth0ProviderWithHistory>
     </BrowserRouter>
