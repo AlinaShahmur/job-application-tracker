@@ -1,0 +1,11 @@
+.process-modal {
+    height: fit-content;
+    margin:0.5rem;
+    text-align: center;
+    margin:0 auto;
+}
+
+.process-modal h2 {
+    clear: both;
+}
+
