@@ -2,8 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import cron from 'cron';
 import dotenv from 'dotenv';
-import applicationRouter from './routers/applicationRouter'
+import applicationRouter from './routers/applicationRouter';
+import userRouter from './routers/userRouter';
+import processRouter from './routers/processRouter';
 import mongoDb from './db/classes/Mongo'
+
+//
 //import { updateStatus } from './utils/dbOperations';
 
 dotenv.config();
@@ -11,17 +15,18 @@ dotenv.config();
 const app = express();
 const CronJob = cron.CronJob;
 
-
-
 // const { updateStatus } = require('./utils/dbOperations');
-const port = process.env.PORT || 8000
+const port = process.env.PORT || 8000;
+
 app.get('/', (req,res) => {
-    res.send('Job-analyze-server')
+    res.send('Job Application Tracker')
 })
 
 app.use(express.json())
 app.use(cors())
-app.use('/api/applications',applicationRouter)
+app.use('/api/applications',applicationRouter);
+app.use('/api/users',userRouter);
+app.use('/api/processes',processRouter)
 app.listen(port,async () => {
     try {
         await mongoDb.connect()
