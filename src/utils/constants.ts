@@ -6,7 +6,9 @@ export const STATUS = {
 } 
 
 export const DB_COLLECTIONS = {
-    APPLICATIONS: 'applications'
+    APPLICATIONS: 'applications',
+    USERS: 'users',
+    PROCESSES: 'processes'
 }
 
 export const sortTypes = {
