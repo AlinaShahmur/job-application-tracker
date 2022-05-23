@@ -1,0 +1,17 @@
+.applications {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.applications h1{
+    text-align: center;
+    color: #8a996c
+    ;
+}
+
+
+.pagination {
+    position: absolute;
+    bottom: 0;
+}
+
