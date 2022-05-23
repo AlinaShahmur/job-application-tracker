@@ -1,4 +1,5 @@
 export interface ApplicationDoc {
+    process_id: string;
     role: string
     start_date: string;
     stage: string;
@@ -7,5 +8,16 @@ export interface ApplicationDoc {
     company_name: string;
     status: string;
     rejected: boolean;
-    history: History
+    history: History;
+}
+
+export interface ProcessDoc {
+    user_id: string,
+    name: string;
+    applications: string[]
+}
+
+export interface UserDoc {
+    email: string;
+    processes: [];
 }
