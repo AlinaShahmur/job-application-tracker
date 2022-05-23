@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { iconsArrowPath } from "../../utils/constants";
-import ArrowIcon from "./ArrowIcon";
+import ArrowIcon from "../Icons/ArrowIcon";
 import styles from './Pagination.module.css'
 
 function Pagination(props: any) {
