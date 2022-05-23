@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { iconsArrowPath } from '../../utils/constants'
-import ArrowIcon from './ArrowIcon'
+import ArrowIcon from '../Icons/ArrowIcon'
 import styles from './TableHeader.module.css'
 
 function TableHeader(props: any) {
