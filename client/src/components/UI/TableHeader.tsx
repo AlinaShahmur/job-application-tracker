@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { iconsArrowPath } from '../../utils/constants'
-import ArrowIcon from '../Icons/ArrowIcon'
+import { ICONS } from '../../utils/constants'
+import SvgIcon from '../Icons/SvgIcon'
 import styles from './TableHeader.module.css'
 
 function TableHeader(props: any) {
@@ -16,8 +16,11 @@ function TableHeader(props: any) {
         <div>Status</div>
         <div>
             Start Date
-               <span onClick = {onSortClick} className = {styles['sort-btn']}><ArrowIcon path = {isUpSort ? iconsArrowPath.up : iconsArrowPath.down}
-                        style = {{width: 13, height: 13, fill: "#000000"}}/></span> 
+               <span onClick = {onSortClick} className = {styles['sort-btn']}>
+                <SvgIcon path = {isUpSort ? ICONS.path.arrows.up :  ICONS.path.arrows.down}
+                        style = {{width: 13, height: 13, fill: "#000000"}}
+                        viewBox = {ICONS.viewBox.arrows}/>
+                </span> 
         </div>
     </div>
     )

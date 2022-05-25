@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { iconsArrowPath } from "../../utils/constants";
-import ArrowIcon from "../Icons/ArrowIcon";
+import {  ICONS } from "../../utils/constants";
+import SvgIcon from "../Icons/SvgIcon";
 import styles from './Pagination.module.css'
 
 function Pagination(props: any) {
@@ -40,8 +40,10 @@ function Pagination(props: any) {
                 disabled = {currentPage === 1}
             >
                 <span>
-                    <ArrowIcon path = {iconsArrowPath.left}
-                                style = {{width: 15, height: 15, fill: "#37a67d"}} />
+                    <SvgIcon path = {ICONS.path.circle_chevrons.left}
+                            viewBox = {ICONS.viewBox.circle_chevron}
+                            style = {{width: 25, height: 25, fill: "#8a996c"}} 
+                    />
                 </span>
             </button>
         
@@ -62,8 +64,10 @@ function Pagination(props: any) {
                 disabled = {currentPage === props.pages}
             >
                 <span>
-                    <ArrowIcon path = {iconsArrowPath.right}
-                                    style = {{width: 15, height: 15,fill: '#37a67d' }}/>
+                    <SvgIcon path = {ICONS.path.circle_chevrons.right}
+                            viewBox = {ICONS.viewBox.circle_chevron}
+                            style = {{width: 25, height: 25,fill: "#8a996c" }}
+                    />
                 </span>
             </button>
     </div>
