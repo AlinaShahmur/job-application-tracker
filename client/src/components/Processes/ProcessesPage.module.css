@@ -1,8 +1,13 @@
 .process-page {
     margin: 0 auto;
+    text-align: center;
 }
 
 .process-page h3 {
     color:#8a996c;
+}
+
+.create-new-btn {
+    background-color: #b2baa2;
 }
   

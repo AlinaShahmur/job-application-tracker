@@ -36,7 +36,7 @@ export default function ProcessesPage() {
             <Processes onClickOpenEditHandler = {() => setIsEditProcessShow(true)}/>
             {isCreateProcessShow && <ProcessModal isEdit = {false} onClose = {() =>  setIsCreateProcessShow(false)}/>}
             {isEditProcessShow && <ProcessModal isEdit = {true} onClose = {() =>  setIsEditProcessShow(false)}/>}
-            <button onClick={() => setIsCreateProcessShow(true)}>Create New</button>
+            <button className={classes['create-new-btn']} onClick={() => setIsCreateProcessShow(true)}>Create New</button>
         </div>
     )
 }

@@ -1,17 +1,19 @@
 .applications {
     max-width: 1000px;
     margin: 0 auto;
+    text-align: center;
+    
 }
 
 .applications h1{
     text-align: center;
-    color: #8a996c
-    ;
+    color: #8a996c;
 }
 
 
 .pagination {
     position: absolute;
     bottom: 0;
+
 }
 

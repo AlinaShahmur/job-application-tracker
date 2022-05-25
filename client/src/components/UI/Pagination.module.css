@@ -1,5 +1,7 @@
 .pagination {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .btn-num {
@@ -11,7 +13,7 @@
 }
 
 .btn-num .active  {
-   color: #37a67d;
+   color: #8a996c;
    font-weight: 800;
 } 
 
@@ -27,7 +29,7 @@
 
 
 .side-btn button span {
-    color:"#37a67d";
+    color:"#8a996c";
     width: 20px;
     height: 20px;
 }
