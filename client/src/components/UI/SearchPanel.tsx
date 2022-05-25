@@ -1,4 +1,5 @@
 import { inputDebouncer } from "../../utils/utils"
+import classes from './SearchPanel.module.css'
 
 function SearchPanel(props: any) {
 
@@ -7,7 +8,7 @@ function SearchPanel(props: any) {
         }, 1000)
     
     return (
-        <input placeholder="company name of role" onKeyUp={(e: any) => onSearchHandler(e.target.value)}/>
+        <input className = {classes['search-input']} placeholder="company name of role" onKeyUp={(e: any) => onSearchHandler(e.target.value)}/>
     )
 }
 
