@@ -1,0 +1,21 @@
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 20;
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+
+.image-viewer{
+
+}
+
+.image-viewer img {
+    position: fixed;
+    top:5vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index:30;
+}
