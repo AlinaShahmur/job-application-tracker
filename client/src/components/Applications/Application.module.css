@@ -5,6 +5,10 @@
     justify-content: space-around;
 }
 
+.button-img {
+    background-color: white;
+}
+
 .timeline {
     position: relative;
     max-width: 300px;

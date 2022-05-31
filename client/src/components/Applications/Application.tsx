@@ -1,22 +1,33 @@
+import { application } from "express";
+import { useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
+import { ICONS } from "../../utils/constants";
 import { pretiffyDate } from "../../utils/utils";
-import Wrapper from "../UI/Wrapper";
+import SvgIcon from "../Icons/SvgIcon";
+import ImageViewer from "../UI/ImageViewer";
 import styles from './Application.module.css'
 
 function Application() {
     let { id } = useParams();
-    const location: any = useLocation()
+    const location: any = useLocation();
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false)
     const { item } = location.state
     return (
+    <div>
         <div className = {styles.application}>
-            <Wrapper width = {300} height = {200}>
                 <div>
                     <h1>Commmon Information</h1>
                     <h3>{item.role} - {item.company_name}</h3> 
                     <p>{item.status}</p>
+
+                    <button onClick={() => setIsImageModalOpen(true) }>
+                        <SvgIcon viewBox = {ICONS.viewBox.image_icon}
+                                path = {ICONS.path.image_icon}
+                                style = {{fill: "#8a996c", width: 15, height: 15}}
+                            />
+                    </button>
+
                 </div>
-            </Wrapper >
-            <Wrapper width = {300} height = {'fit-content'}>
                 <div>
                     <h1>History</h1>
                     <div className={styles.timeline}>
@@ -34,8 +45,9 @@ function Application() {
                             </div> */}
                     </div>
                 </div>
-            </Wrapper>
         </div>
+        {isImageModalOpen && <ImageViewer src = {item.img} onClose = {() => setIsImageModalOpen(false)}/>}
+    </div>
 
     )
 }
