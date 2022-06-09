@@ -2,3 +2,8 @@
     display: flex;
     justify-content: space-between;
 }
+
+.process a {
+    color: black;
+    align-self: center;
+}
