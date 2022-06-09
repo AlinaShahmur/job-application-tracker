@@ -4,7 +4,16 @@
     position:absolute;
     top:100%;
     right: 0;
-    padding: 5px;
+    padding:10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     width:150%;
+}
+
+.profile-dropdown li {
+    margin-bottom: 5px;
+}
+
+.logout button{
+    background-color: #ffffff;
+    padding: 0;
 }
