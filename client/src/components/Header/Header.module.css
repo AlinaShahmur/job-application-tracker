@@ -5,15 +5,12 @@
     justify-content: space-between;
 }
 
-.btn-logout {
+.user-info {
     margin: 1rem;
     position: relative;
     
 }
 
-.btn-logout button {
-    background-color: #ffaf94;
-}
 /* 
 .navbar div{
     display: flex;
