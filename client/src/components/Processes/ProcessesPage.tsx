@@ -6,6 +6,7 @@ import { fetchData } from "../../utils/request_client";
 import Processes from "./Processes";
 import ProcessModal from "./ProcessModal";
 import classes from './ProcessesPage.module.css';
+import { processActions } from "../../store/process-store";
 
 export default function ProcessesPage() {
     const { user }: any = useAuth0();
@@ -21,11 +22,11 @@ export default function ProcessesPage() {
           const userData = await fetchData('get', null, `${BASE_URL_DEV}/users/${user.email}`)
           const targetUserObject = Object.assign(user, userData)
           sessionStorage.setItem('user', JSON.stringify(targetUserObject))
-          console.log(targetUserObject.processes);
-          dispatch({type: 'LOAD_PROCESSES', payload: targetUserObject.processes})
+          dispatch(processActions.initialLoading(targetUserObject.processes));
+          return
         }
-        const user_data: any = sessionStorage.getItem('user')
-        dispatch({type: 'LOAD_PROCESSES', payload: JSON.parse(user_data).processes})
+        const user_data: any = sessionStorage.getItem('user');
+        dispatch(processActions.initialLoading(JSON.parse(user_data).processes))
       }
       fetchUsers();
     },[]);
