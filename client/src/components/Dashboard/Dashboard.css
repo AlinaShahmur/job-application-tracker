@@ -1,0 +1,7 @@
+.dashboard {
+    display: flex; 
+}
+
+.dashboard__item {
+    flex-basis:30%;
+}
