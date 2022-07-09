@@ -8,7 +8,8 @@ export const STATUS = {
 export const DB_COLLECTIONS = {
     APPLICATIONS: 'applications',
     USERS: 'users',
-    PROCESSES: 'processes'
+    PROCESSES: 'processes',
+    HISTORIES: 'histories'
 }
 
 export const sortTypes = {
