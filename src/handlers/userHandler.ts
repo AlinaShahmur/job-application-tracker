@@ -1,6 +1,6 @@
 import Process from "../db/classes/Process";
 import User from "../db/classes/User";
-const mongodb = require('mongodb')
+import { ObjectId } from 'mongodb'
 
 
 export const getUser = async (req, res) => {
@@ -9,7 +9,7 @@ export const getUser = async (req, res) => {
         let userExist, usersProcesses;
         userExist = await User.getUserByEmail(email);
         if (userExist) {
-            usersProcesses = await Process.findByIds(userExist.processes.map(process => new mongodb.ObjectId(process)));
+            usersProcesses = await Process.findByIds(userExist.processes.map(process => new ObjectId(process)));
             console.log({usersProcesses});
 
             userExist.processes = usersProcesses
