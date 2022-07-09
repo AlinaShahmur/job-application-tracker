@@ -2,7 +2,6 @@ export interface ApplicationDoc {
     process_id: string;
     role: string
     start_date: string;
-    stage: string;
     img: string;
     source: string;
     company_name: string;
@@ -20,4 +19,14 @@ export interface ProcessDoc {
 export interface UserDoc {
     email: string;
     processes: [];
+}
+
+export interface StageDoc {
+    date: Date,
+    stage_name: string
+}
+
+export interface HistoryDoc {
+    application_id: string;
+    history: StageDoc[];
 }

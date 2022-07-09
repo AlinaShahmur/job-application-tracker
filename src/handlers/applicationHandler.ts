@@ -2,6 +2,7 @@ import  Application  from "../db/classes/Application";
 import { Request, Response } from "express";
 import { fieldsForQuery } from "../utils/constants";
 import { buildMongoQuery, buildSortQuery } from "../utils/dbOperations";
+import { AppHistory } from "../db/classes/History";
 
 
 export async function getAllItems(req: Request,res: Response) {
@@ -39,7 +40,6 @@ export async function createApplication(req: Request,res: Response) {
         app.source = application.source,
         app.rejected = application.rejected,
         app.company_name = application.company_name,
-        app.stage = application.stage,
         app.history = application.history,
         app.process_id = application.process_id
 
@@ -61,16 +61,17 @@ export async function updateApplication(req: Request,res: Response){
             source: application.source,
             rejected: application.rejected,
             company_name: application.company_name,
-            stage: application.stage,
             history: application.history,
             process_id: application.process_id
         }
-        await Application.update(id, applicationToUpdate)
+        await Application.update(id, applicationToUpdate);
+        await AppHistory
         res.send({success: true, data: 'updated'})
     } catch (err){
         res.send({success: false, data: [], message: err})
     }
 }
+
 
 export async function deleteApplication(req: Request,res: Response) {
     try {
