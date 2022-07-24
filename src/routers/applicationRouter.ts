@@ -1,5 +1,5 @@
 import { createApplication, getAllItems, getPaginatedItems, updateApplication } from '../handlers/applicationHandler';
-
+import { auth } from '../middlewares/auth';
 const {Router} = require('express');
 const app = Router();
 
@@ -9,27 +9,27 @@ const app = Router();
 @route: applications
 @path: /
 */
-app.get('/', getPaginatedItems)
+app.get('/', auth, getPaginatedItems)
 
 
 /*
 @route: applications
 @path: /
 */
-app.post('/', createApplication)
+app.post('/', auth, createApplication)
 
 /*
 @route: applications
 @path: /
 @params: id
 */
-app.put('/:id', updateApplication);
+app.put('/:id', auth, updateApplication);
 
 /*
 @route: applications
 @path: /all
 */
-app.get('/all', getAllItems)
+app.get('/all', auth, getAllItems)
 
 
 export default app
