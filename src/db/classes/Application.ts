@@ -12,7 +12,6 @@ class Application {
     public company_name: string;
     public status: string;
     public rejected: boolean;
-    public history: History;
     public process_id: string;
 
     static async find(limit, skip, searchQuery, sortQuery) {
@@ -26,7 +25,8 @@ class Application {
                             .skip(Number(skip))
                             .toArray();
         } catch(err) {
-            console.log(err)
+            console.error(err);
+            throw err
         }
     }
 
@@ -45,7 +45,8 @@ class Application {
                             .collection(DB_COLLECTIONS.APPLICATIONS)
                             .countDocuments(query)
         } catch (err) {
-            console.log(err)
+            console.error(err);
+            throw err
         }
     }
     async create() {
@@ -54,13 +55,11 @@ class Application {
                                                 .db
                                                 .collection(DB_COLLECTIONS.APPLICATIONS)
                                                 .insertOne(this);
-            await mongo
-                    .db
-                    .collection(DB_COLLECTIONS.HISTORIES)
-                    .insertOne(history);
+            return createdApplication.insertedId;
 
         } catch (err) {
-            console.log(err)
+            console.error(err);
+            throw err
         }
 
     }
@@ -72,7 +71,8 @@ class Application {
                             .updateOne({_id: id},{$set: obj})
 
         } catch (err) {
-            console.log(err)
+            console.error(err);
+            throw err
         }
 
     }
@@ -84,7 +84,8 @@ class Application {
                             .collection(DB_COLLECTIONS.APPLICATIONS)
                             .deleteOne({_id: new ObjectId(id)})
         } catch (err) {
-            console.log(err)
+            console.error(err);
+            throw err
         }
     }
 }
