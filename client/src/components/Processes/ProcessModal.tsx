@@ -1,5 +1,5 @@
 import { SyntheticEvent, useRef } from "react";
-import { BASE_URL_DEV } from "../../utils/constants";
+import { BASE_URL } from "../../utils/constants";
 import { fetchData } from "../../utils/request_client";
 import CloseButton from "../UI/CloseButton";
 import Modal from "../UI/Modal";
@@ -16,7 +16,7 @@ export default function ProcessModal(props: any) {
             user_id
         }
         const method = props.isEdit ? 'PUT' : 'POST';
-        await fetchData(method,process,`${BASE_URL_DEV}/processes`)
+        await fetchData(method,process,`${BASE_URL}/processes`)
     }
     return (
         <Modal onClose = {props.onClose}>

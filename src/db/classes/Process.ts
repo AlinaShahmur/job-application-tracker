@@ -7,13 +7,20 @@ class Process {
     public name: string;
     public user_id: string;
     public applications: string[];
-    public collection: string = DB_COLLECTIONS.PROCESSES
 
     static async findByIds(processesIds) {
         return await mongo
                         .db
                         .collection(DB_COLLECTIONS.PROCESSES)
                         .find({_id: {$in: processesIds}})
+                        .toArray()
+    }
+
+    static async find(query = {}) {
+        return await mongo
+                        .db
+                        .collection(DB_COLLECTIONS.PROCESSES)
+                        .find(query)
                         .toArray()
     }
 
@@ -25,8 +32,21 @@ class Process {
         }
         return await mongo
                         .db
-                        .collection(this.collection)
+                        .collection(DB_COLLECTIONS.PROCESSES)
                         .insertOne(newProcess)
+    }
+    static async findAll() {
+        return await mongo
+                        .db
+                        .collection(DB_COLLECTIONS.PROCESSES)
+                        .find()
+                        .toArray()
+    }
+    static async deleteOne(process_id) {
+        return await mongo
+                        .db
+                        .collection(DB_COLLECTIONS.PROCESSES)
+                        .deleteOne({_id: process_id})
     }
 }
 

@@ -1,5 +1,5 @@
 import { SyntheticEvent, useRef } from "react";
-import { BASE_URL_DEV } from "../../utils/constants";
+import { BASE_URL } from "../../utils/constants";
 import { fetchData } from "../../utils/request_client";
 import CloseButton from "../UI/CloseButton";
 import Modal from "../UI/Modal";
@@ -15,7 +15,7 @@ function CreateProcess(props: any) {
             name: inputRef.current.value,
             user_id
         }
-        await fetchData('POST',createdProcess,`${BASE_URL_DEV}/processes`)
+        await fetchData('POST',createdProcess,`${BASE_URL}/processes`)
     }
     return (
         <Modal onClose = {props.onClose}>

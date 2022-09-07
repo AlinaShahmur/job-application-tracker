@@ -1,9 +1,11 @@
 import Process from "../db/classes/Process";
 
-export const getProcesses = async (req, res) =>{
+export const getProcessesByUserEmail = async (req, res) =>{
     try {
-        const { processesId } = req.body;
-        const processes = await Process.findByIds(processesId);
+        const {userEmail} = req.params;
+        const query = {user: userEmail}
+        const processes = await Process.find(query);
+        console.log(processes)
         res.send({success: true, data: processes})
     } catch (error) {
         console.log("Error in getProcesses", error);
