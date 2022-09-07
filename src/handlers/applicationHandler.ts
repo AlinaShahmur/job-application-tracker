@@ -1,8 +1,9 @@
 import  Application  from "../db/classes/Application";
 import { Request, Response } from "express";
-import { fieldsForQuery } from "../utils/constants";
+import { fieldsForQuery, STATUS } from "../utils/constants";
 import { buildMongoQuery, buildSortQuery } from "../utils/dbOperations";
 import { AppHistory } from "../db/classes/History";
+import { StageDoc } from "../types";
 
 
 export async function getAllItems(req: Request,res: Response) {
@@ -31,22 +32,34 @@ export async function getPaginatedItems(req: Request,res: Response) {
 export async function createApplication(req: Request,res: Response) {
     try {
         const application = req.body;
-        const app = new Application()
+        const app = new Application();
 
-        app.role = application.role,
-        app.start_date = application.start_date,
-        app.status = application.status,
-        app.img = application.img,
-        app.source = application.source,
-        app.rejected = application.rejected,
-        app.company_name = application.company_name,
-        app.history = application.history,
-        app.process_id = application.process_id
+        app.role = application.role;
+        app.start_date = application.start_date;
+        app.status = STATUS.PENDING;
+        app.img = application.img;
+        app.source = application.source;
+        app.rejected = false;
+        app.company_name = application.company_name;
+        app.process_id = application.process_id;
 
-        app.create()
-        res.send({success: true, data: 'created'})
+        const application_id = await app.create();
+
+        const history = new AppHistory();
+
+        const stage: StageDoc = {
+            date: application.start_date,
+            stage_name: "CV was sent"
+        } 
+
+        history.application_id = application_id;
+        history.pushToHistory(stage);
+        await history.save();
+
+        res.send({success: true, data: [], message: "created"});
     } catch (err){
-        res.send({success: false, data: [], message: err})
+        console.error("Error in createApplication", err)
+        res.status(500).send({success: false, data: [], message: err});
     }
 }
 export async function updateApplication(req: Request,res: Response){
