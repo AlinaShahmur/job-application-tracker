@@ -1,7 +1,8 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router-dom';
-import { BASE_URL_DEV } from '../../utils/constants';
+import { BASE_URL } from '../../utils/constants';
 import { fetchData } from '../../utils/request_client';
 import Loader from '../UI/Loader';
 import Pagination from '../UI/Pagination';
@@ -12,7 +13,7 @@ import styles from './Applications.module.css'
 
 function Applications(props: any) {
 
-
+    const { getIdTokenClaims } = useAuth0();
     const [applications, setApplications] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [limit, setLimit] = useState(10);
@@ -25,20 +26,19 @@ function Applications(props: any) {
     const location: any = useLocation()
     const { process } = location.state
     useEffect( () => {
-        console.log(props)
-
-        const query = [{key:'skip', value:0},{key:'limit', value:10},{key:'queryString', value:''}]
-        const url = `${BASE_URL_DEV}/applications?skip=${(currentPage-1)*limit}&limit=${limit}&queryString=${searchQuery}&sortType=${isUpSort ? 'desc' : 'asc'}`
-        fetchData('get', null, url)
-        .then(res => {
-            console.log('fetch data')
+        async function getApplications() {
+            const token: any = await getIdTokenClaims();
+            console.log({token})
+            const query = [{key:'skip', value:0},{key:'limit', value:10},{key:'queryString', value:''}]
+            const url = `${BASE_URL}/applications?skip=${(currentPage-1)*limit}&limit=${limit}&queryString=${searchQuery}&sortType=${isUpSort ? 'desc' : 'asc'}`
+            const res = await fetchData('get', null, url, token.__raw)
+            console.log("res", res)
             setPages(Math.ceil(res.totalCount / limit))
             setApplications(res.data);
             setIsLoading(false);
-        })
-        .catch(err =>{
-            console.log(err)
-        })
+        }
+        getApplications();
+
     },[currentPage,searchQuery,isUpSort])
 
     const onSearchHandler = (searchString: string) => {
