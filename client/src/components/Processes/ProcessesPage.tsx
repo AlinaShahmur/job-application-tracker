@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { BASE_URL } from "../../utils/constants";
 import { fetchData } from "../../utils/request_client";
@@ -8,28 +8,14 @@ import ProcessModal from "./ProcessModal";
 import classes from './ProcessesPage.module.css';
 import { processActions } from "../../store/process-store";
 
-export default function ProcessesPage() {
+export const ProcessesPage: React.FC = () => {
     const { user, getIdTokenClaims  }: any = useAuth0();
     const dispatch = useDispatch();
+
     const [isCreateProcessShow, setIsCreateProcessShow] = useState(false);
     const [isEditProcessShow, setIsEditProcessShow] = useState(false);
-    const [processes, setProcesses] = useState([])
   
     useEffect(() => {
-      console.log(user)
-      // const fetchUsers = async () => {
-      //   if (!sessionStorage.getItem('user')) {
-          
-      //     const userData = await fetchData('get', null, `${BASE_URL}/users/${user.email}`)
-      //     const targetUserObject = Object.assign(user, userData)
-      //     sessionStorage.setItem('user', JSON.stringify(targetUserObject))
-      //     dispatch(processActions.initialLoading(targetUserObject.processes));
-      //     return
-      //   }
-      //   const user_data: any = sessionStorage.getItem('user');
-      //   dispatch(processActions.initialLoading(JSON.parse(user_data).processes))
-      // }
-      // fetchUsers();
       const getProcesses = async function() {
         const token = await getIdTokenClaims();
         console.log({token})
@@ -38,6 +24,7 @@ export default function ProcessesPage() {
       }
       getProcesses();
     },[]);
+    
     return (
         <div className={classes['process-page']}>
             <h1>Welcome, {user.name}</h1>
