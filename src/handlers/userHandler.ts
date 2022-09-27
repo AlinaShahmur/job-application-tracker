@@ -19,10 +19,11 @@ export const getUser = async (req, res) => {
         newUser.email = email;
         newUser.processes = []
         const createdUser = await newUser.create();
-        return res.send(createdUser)
+
+        return res.send({sucess: true, data: {createdUser}});
 
     } catch (error) {
-        console.log(error);
-        res.send('Error in get User', error.message)
+        console.error(error);
+        res.send({sucess: false, message: error.toString()})
     }
 }
