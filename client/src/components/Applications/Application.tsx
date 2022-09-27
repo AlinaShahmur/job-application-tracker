@@ -1,21 +1,32 @@
-import { application } from "express";
-import { useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
-import { ICONS } from "../../utils/constants";
+
+import { SyntheticEvent, useState } from "react";
+import { useLocation } from "react-router-dom";
+import {  ICONS } from "../../utils/constants";
 import { pretiffyDate } from "../../utils/utils";
 import SvgIcon from "../Icons/SvgIcon";
 import ImageViewer from "../UI/ImageViewer";
 import styles from './Application.module.css'
+import CreateApplication from "./CreateApplication";
 
 function Application() {
-    let { id } = useParams();
     const location: any = useLocation();
-    const [isImageModalOpen, setIsImageModalOpen] = useState(false)
-    const { item } = location.state
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+    const [isEditApplicationOpen, setIsEditApplicationOpen] = useState(false)
+    const { item } = location.state;
+
+    const deleteBtnClickHandler = (e: SyntheticEvent) => {
+
+    }
+
     return (
     <div>
+        {isEditApplicationOpen && <CreateApplication
+                                     isEdit = {true}
+                                     application = {item}
+                                     onClose = {() => setIsEditApplicationOpen(false)}
+                                   />}
         <div className = {styles.application}>
-                <div>
+                <div className={styles["common-information"]}>
                     <h1>Commmon Information</h1>
                     <h3>{item.role} - {item.company_name}</h3> 
                     <p>{item.status}</p>
@@ -26,7 +37,8 @@ function Application() {
                                 style = {{fill: "#8a996c", width: 15, height: 15}}
                             />
                     </button>
-
+                    <button onClick = {() => setIsEditApplicationOpen(true)} className = "success">Edit</button>
+                    {/* <button onClick = {deleteBtnClickHandler} className = "danger">Delete</button> */}
                 </div>
                 <div>
                     <h1>History</h1>
@@ -35,14 +47,12 @@ function Application() {
                                     <div key = {event._id} className = {`${styles['timeline-container']} ${index % 2 === 0 ? styles['right'] : styles['left']}`}>
                                         <div className = {styles['timeline-content']}>
                                             <h5>{pretiffyDate(event.date)}</h5>  
-                                            <p>{event.event}</p> 
+                                            <p>{event.stage_name}</p> 
                                         </div>
-                                    </div>))}  
+                                    </div>))}
+  
                     </div>
                     <div className = {styles[`timeline-container status ${item.status === 'rejected' ? 'red': ''}`]}>
-                            {/* <div className = {styles['timeline-content status']}>
-                                <h5>{item.status}</h5>  
-                            </div> */}
                     </div>
                 </div>
         </div>
