@@ -1,16 +1,15 @@
 
-import { useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
+import { ApplicationDoc } from '../../types'
 import { STATUS_AND_COLORS } from '../../utils/constants'
 import { pretiffyDate } from '../../utils/utils'
 import StatusIcon from '../Icons/StatusIcon'
 import styles from './ApplicationItem.module.css'
-import PopupDate from './PopupDate'
 
 
-function ApplicationItem(props: any) {
-    const [isPopupDateShown, setIsPopupDateShown] = useState(false);
-    const pathname = window.location.pathname;
+export const ApplicationItem : React.FC<{item: ApplicationDoc}> = (props: any) => {
+    const { pathname } = window.location;
     return (
         <div className = {styles['application-item']}>
             <div>
@@ -20,10 +19,7 @@ function ApplicationItem(props: any) {
                 {props.item.company_name}
             </div>
             <div className = {styles['status']} 
-                onMouseEnter = {() =>  setIsPopupDateShown(true)} 
-                onMouseLeave = {() => setIsPopupDateShown(false)}
             >  
-                {isPopupDateShown && <PopupDate date = {pretiffyDate(props.item.history[props.item.history.length-1].date)}></PopupDate>}
                 <StatusIcon color = {STATUS_AND_COLORS[props.item.status]} label = {props.item.status}/>
             </div>
             <div>
