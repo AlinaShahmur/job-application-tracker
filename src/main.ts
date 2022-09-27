@@ -5,41 +5,51 @@ import dotenv from 'dotenv';
 import applicationRouter from './routers/applicationRouter';
 import userRouter from './routers/userRouter';
 import processRouter from './routers/processRouter';
+import sourcesRouter from './routers/sourcesRouter';
 import mongoDb from './db/classes/Mongo'
+import bodyParser from 'body-parser';
 
-//
-//import { updateStatus } from './utils/dbOperations';
+
+import { updateStatus } from './utils/dbOperations';
+import { auth } from './middlewares/auth';
 
 dotenv.config();
 
 const app = express();
 const CronJob = cron.CronJob;
 
-// const { updateStatus } = require('./utils/dbOperations');
 const port = process.env.PORT || 8000;
 
 app.get('/', (req,res) => {
     res.send('Job Application Tracker')
 })
 
-app.use(express.json())
-app.use(cors())
-app.use('/api/applications',applicationRouter);
-app.use('/api/users',userRouter);
-app.use('/api/processes',processRouter)
+app.use(express.json());
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+app.use(cors());
+
+app.use('/api/applications',auth, applicationRouter);
+app.use('/api/users', auth, userRouter);
+app.use('/api/processes', auth, processRouter);
+app.use('/api/sources', auth, sourcesRouter);
+
 app.listen(port,async () => {
     try {
         await mongoDb.connect()
         console.log(`Listening on port ${port}`)
         console.log(`Connected to mongo in ${process.env.NODE_ENV} mode`)
-        // const job = new CronJob({
-        //     //cronTime: '0 12 * * *',
-        //     cronTime: '1/1 * * * *',
-        //     onTick: updateStatus,
-        //     start: true
-        // })
+
     } catch (err) {
         console.log("Error in listen", err)
     }
+})
+
+const job = new CronJob({
+    cronTime: '0 12 * * *',
+    onTick: updateStatus,
+    start: true
 })
 
