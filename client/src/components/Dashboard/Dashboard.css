@@ -1,7 +1,10 @@
 .dashboard {
     display: flex; 
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .dashboard__item {
-    flex-basis:30%;
+    width: 50%;
 }
