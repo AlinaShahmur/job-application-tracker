@@ -1,0 +1,32 @@
+.create-app-form {
+    text-align: center;
+}
+
+
+.form-group {
+    margin: 20px;
+}
+
+.form-group label {
+    display: inline-block;
+     margin-bottom: 10px;
+}
+
+.label-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.form-group input[type = "file"] {
+    display: none;
+}
+
+.add-source-btn {
+    float: right;
+}
+
+.add-source-form {
+    text-align: center;
+}
