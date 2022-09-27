@@ -2,7 +2,7 @@ import classes from './Header.module.css'
 import { useAuth0 } from "@auth0/auth0-react"
 import { useEffect, useState } from "react";
 import ProfileDropdown from './ProfileDropdown';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 
 function Header() {
@@ -15,7 +15,7 @@ function Header() {
     return (
         <nav className = {classes.navbar}>
             <div className={classes.logo}>
-                My Application Tracker
+                <Link to = "/">My Application Tracker</Link> 
             </div>
             <div className = {classes["user-info"]}>
                 {isAuthenticated && 

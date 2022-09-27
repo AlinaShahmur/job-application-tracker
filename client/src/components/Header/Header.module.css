@@ -23,10 +23,13 @@
 
 .logo {
     text-transform: uppercase;
-    color: #8a996c;
     font-weight: 700;
     padding: 0.8rem;
     align-self: center;
+}
+
+.logo a {
+    color: #8a996c;
 }
 
 .links a {
