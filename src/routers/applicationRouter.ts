@@ -1,35 +1,40 @@
 import { createApplication, getAllItems, getPaginatedItems, updateApplication } from '../handlers/applicationHandler';
-import { auth } from '../middlewares/auth';
 const {Router} = require('express');
 const app = Router();
 
 
 
+
+/*
+@route: applications
+@path: /all
+*/
+
+app.get('/all', getAllItems);
+
 /*
 @route: applications
 @path: /
 */
-app.get('/', auth, getPaginatedItems)
+app.get('/', getPaginatedItems);
 
 
 /*
 @route: applications
 @path: /
 */
-app.post('/', auth, createApplication)
+
+app.post('/', createApplication);
 
 /*
 @route: applications
 @path: /
 @params: id
 */
-app.put('/:id', auth, updateApplication);
 
-/*
-@route: applications
-@path: /all
-*/
-app.get('/all', auth, getAllItems)
+app.put('/:id', updateApplication);
+
+
 
 
 export default app

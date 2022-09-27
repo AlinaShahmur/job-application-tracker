@@ -1,5 +1,4 @@
 import { createProcess, getProcessesByUserEmail } from '../handlers/processHandler';
-import { auth } from '../middlewares/auth';
 
 const {Router} = require('express');
 const app = Router();
@@ -10,12 +9,12 @@ const app = Router();
     @path: /
     @params: userEmail
 */
-app.get('/:userEmail', auth, getProcessesByUserEmail)
+app.get('/:userEmail',  getProcessesByUserEmail)
 
 /*
     @route: processes
     @path: /
 */
-app.post('/', auth, createProcess)
+app.post('/', createProcess)
 
 export default app
