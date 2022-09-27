@@ -3,6 +3,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    height: 100vh;
 }
 
 .button-img {
@@ -28,7 +29,7 @@
 
 .timeline-container {
     position: relative;
-    width: 50%;
+    /* width: 50%; */
 }
 
 .timeline-content {
@@ -69,7 +70,7 @@
 }
 
 .left {
-    left: 0;
+    left: -50%;
 }
 
 .right {
@@ -79,5 +80,17 @@
 .right::after {
     left: -16px;
   }
+
+.common-information {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.common-information button {
+    margin: 15px;
+}
+
+
 
 
