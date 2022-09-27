@@ -1,4 +1,4 @@
-export const TWO_WEEKS = 1209600000
+export const THREE_WEEKS = 1814400000
 export const STATUS = {
     FULFILLED: 'fullfilled',
     PENDING: 'pending',
@@ -9,7 +9,8 @@ export const DB_COLLECTIONS = {
     APPLICATIONS: 'applications',
     USERS: 'users',
     PROCESSES: 'processes',
-    HISTORIES: 'histories'
+    HISTORIES: 'histories',
+    SOURCES: 'sources'
 }
 
 export const sortTypes = {
