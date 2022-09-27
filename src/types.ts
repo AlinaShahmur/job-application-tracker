@@ -1,19 +1,19 @@
+import { ObjectId } from "mongodb";
+
 export interface ApplicationDoc {
-    process_id: string;
+    process_id: ObjectId;
     role: string
-    start_date: string;
+    start_date: Date;
     img: string;
     source: string;
     company_name: string;
     status: string;
-    rejected: boolean;
     history: History;
 }
 
 export interface ProcessDoc {
-    user_id: string,
+    user: string,
     name: string;
-    applications: string[]
 }
 
 export interface UserDoc {
