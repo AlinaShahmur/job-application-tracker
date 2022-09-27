@@ -1,25 +1,24 @@
-import {DB_COLLECTIONS} from "../../utils/constants"
-import { ObjectId } from 'mongodb'
-import mongo from './Mongo'
-import { ApplicationDoc } from '../../types'
- 
+import {DB_COLLECTIONS} from "../../utils/constants";
+import mongo from './Mongo';
+import { ApplicationDoc, HistoryDoc } from '../../types';
+import { ObjectId } from "mongodb";
 
 class Application {
     public role: string
-    public start_date: string;
+    public start_date: Date;
     public img: string;
     public source: string;
     public company_name: string;
     public status: string;
-    public rejected: boolean;
-    public process_id: string;
+    public process_id: ObjectId;
+    public history: HistoryDoc[];
 
-    static async find(limit, skip, searchQuery, sortQuery) {
+    async find(limit, skip, searchQuery, sortQuery) {
         try {
             return await mongo
                             .db
                             .collection(DB_COLLECTIONS.APPLICATIONS)
-                            .find(searchQuery)
+                            .find({...searchQuery, process_id: this.process_id})
                             .sort(sortQuery)
                             .limit(Number(limit))
                             .skip(Number(skip))
@@ -30,20 +29,20 @@ class Application {
         }
     }
 
-    static async findAll() {
+    async findAll() {
         return await mongo
                         .db
                         .collection(DB_COLLECTIONS.APPLICATIONS)
-                        .find()
+                        .find({process_id: this.process_id})
                         .toArray()
     }
 
-    static async getTotalCount(query: any) {
+    async getTotalCount(query: any) {
         try {
             return await mongo
                             .db
                             .collection(DB_COLLECTIONS.APPLICATIONS)
-                            .countDocuments(query)
+                            .countDocuments({...query, process_id: this.process_id})
         } catch (err) {
             console.error(err);
             throw err
@@ -68,7 +67,7 @@ class Application {
             return await mongo
                             .db
                             .collection(DB_COLLECTIONS.APPLICATIONS)
-                            .updateOne({_id: id},{$set: obj})
+                            .updateOne({_id:  new ObjectId(id)},{$set: obj})
 
         } catch (err) {
             console.error(err);

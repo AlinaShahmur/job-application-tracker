@@ -2,15 +2,20 @@ import  Application  from "../db/classes/Application";
 import { Request, Response } from "express";
 import { fieldsForQuery, STATUS } from "../utils/constants";
 import { buildMongoQuery, buildSortQuery } from "../utils/dbOperations";
-import { AppHistory } from "../db/classes/History";
 import { StageDoc } from "../types";
+import { ObjectId } from 'mongodb';
 
 
 export async function getAllItems(req: Request,res: Response) {
     try {
-        const applications = await Application.findAll();
-        const totalItems = await Application.getTotalCount({});
-        res.send({success: true, data: applications, totalCount: totalItems})
+        const process_id: any = req.headers["process_id"];
+
+        const application = new Application(); 
+        application.process_id = new ObjectId(process_id);
+        const promises = [application.findAll(), application.getTotalCount({})];
+        const [applications, totalItems] = await Promise.all(promises);
+
+        res.send({success: true, data: {applications, totalItems}})
     } catch(err) {
         res.send({success: false, data: [], message: err})
     }
@@ -18,13 +23,20 @@ export async function getAllItems(req: Request,res: Response) {
 
 export async function getPaginatedItems(req: Request,res: Response) {
     try {
-        const {limit, skip, queryString = '', sortType} = req.query;
+        const process_id: any = req.headers["process_id"];
 
+        const {limit, skip, queryString = '', sortType} = req.query;
+        
         const sortQuery = buildSortQuery(sortType)
         const searchQuery = buildMongoQuery(queryString, fieldsForQuery);
-        const totalItems = await Application.getTotalCount(searchQuery);
-        const applications = await Application.find(limit, skip, searchQuery, sortQuery);
-        res.send({success: true, data: applications, totalCount: totalItems})
+
+        const application = new Application(); 
+        application.process_id = new ObjectId(process_id);
+
+        const promises = [application.getTotalCount(searchQuery), application.find(limit, skip, searchQuery, sortQuery)];
+        const [totalItems, applications] = await Promise.all(promises);
+
+        res.send({success: true, data: { applications, totalItems }})
     } catch (err){
         res.send({success: false, data: [], message: err})
     }
@@ -35,28 +47,26 @@ export async function createApplication(req: Request,res: Response) {
         const app = new Application();
 
         app.role = application.role;
-        app.start_date = application.start_date;
+        app.start_date = new Date(application.start_date);
         app.status = STATUS.PENDING;
         app.img = application.img;
         app.source = application.source;
-        app.rejected = false;
         app.company_name = application.company_name;
-        app.process_id = application.process_id;
+        app.process_id = new ObjectId(application.process_id);
 
-        const application_id = await app.create();
-
-        const history = new AppHistory();
-
-        const stage: StageDoc = {
+        const initialStage: StageDoc = {
             date: application.start_date,
             stage_name: "CV was sent"
-        } 
+        };
 
-        history.application_id = application_id;
-        history.pushToHistory(stage);
-        await history.save();
+        const history = [];
 
-        res.send({success: true, data: [], message: "created"});
+        history.push(initialStage);
+        app.history = history;
+
+        const result = await app.create();
+
+        res.send({success: true, data: {application_id: result.insertedId}, message: "created"});
     } catch (err){
         console.error("Error in createApplication", err)
         res.status(500).send({success: false, data: [], message: err});
@@ -68,17 +78,16 @@ export async function updateApplication(req: Request,res: Response){
         const { id } = req.params;
         const applicationToUpdate = {
             role: application.role,
-            start_date: application.start_date,
+            start_date: new Date(application.start_date),
             status: application.status,
             img: application.img,
             source: application.source,
-            rejected: application.rejected,
             company_name: application.company_name,
             history: application.history,
-            process_id: application.process_id
+            process_id: new ObjectId(application.process_id)
         }
         await Application.update(id, applicationToUpdate);
-        await AppHistory
+
         res.send({success: true, data: 'updated'})
     } catch (err){
         res.send({success: false, data: [], message: err})
