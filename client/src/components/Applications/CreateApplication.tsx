@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FileObject } from "../../types";
 import useFileInput from "../../hooks/useFileInput";
+import Loader from "../UI/Loader";
 
 
 function CreateApplication(props: any) {
@@ -18,6 +19,7 @@ function CreateApplication(props: any) {
     const [isFormCASending, setIsFormCASending] = useState(false);
     const [sourceOptions, setSourceOptions] = useState<Set<string>>(new Set());
     const [isFormAddSourceSending, setIsFormAddSourceSending] = useState(false);
+    const [addNewSourceLoading, setAddNewSourceLoading] = useState(false);
 
     const process: any = useSelector((state: any) => state.process.currentProcess);
     const { getIdTokenClaims } = useAuth0();
@@ -76,8 +78,8 @@ function CreateApplication(props: any) {
 
     useEffect(() => {
         async function fetchSources() {
-            const token = getIdTokenClaims();
-            const res = await fetchData('GET', null, `${BASE_URL}/sources`, token, process._id);
+            const token = await getIdTokenClaims();
+            const res = await fetchData('GET', null, `${BASE_URL}/sources`, token?.__raw, process._id);
             console.log({res});
             
             setSourceOptions(new Set(res));
@@ -91,6 +93,7 @@ function CreateApplication(props: any) {
         
 
         if (isFormCATouched && isFormCAValid) {
+            setIsFormCASending(true);
             const imageBody = {
                 file: fileInputValue.base64,
                 upload_preset: UPLOAD_PRESET
@@ -110,7 +113,7 @@ function CreateApplication(props: any) {
             const token = await getIdTokenClaims();
             await fetchData("POST", JSON.stringify(body), `${BASE_URL}/applications`, token?.__raw, process._id)
             resetFormCAControls();
-            setIsFormCASending(true);
+            setIsFormCASending(false);
 
         }
     }
@@ -151,17 +154,19 @@ function CreateApplication(props: any) {
     const submitFormAddResourceHandler = async (e: SyntheticEvent) => {
         e.preventDefault();
         if (isFormAddSourceValid && isFormAddSourceTouched) {
+            setAddNewSourceLoading(true);
             resetSourceNameInput();
             setIsFormAddSourceSending(true);
 
             const token = await getIdTokenClaims();
             const body = {source_name: sourceNameValue};
 
-            await fetchData('POST', body, `${BASE_URL}/sources`, token?.__raw, process._id);
+            await fetchData('POST', JSON.stringify(body), `${BASE_URL}/sources`, token?.__raw, process._id);
             const updatedSourceList = new Set(sourceOptions).add(sourceNameValue);
             
             setSourceOptions(updatedSourceList)
             setIsFormAddSourceSending(false);
+            setAddNewSourceLoading(false);
         }
     }
 
@@ -249,7 +254,7 @@ function CreateApplication(props: any) {
             
             </form>
     )
-    const addSourceForm = (
+    const addSourceForm = addNewSourceLoading ? <Loader size = {5}/> :(
             <div>
                 <form onSubmit={submitFormAddResourceHandler} className = {`${styles["add-source-form"]} ${formAddSourceClasses}`}>
                     <RoundButton 
