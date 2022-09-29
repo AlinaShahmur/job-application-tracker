@@ -58,7 +58,7 @@ function Applications() {
                 <SearchPanel onSearch = {onSearchHandler}/>
             <div className={styles.table}>
                 <TableHeader onSortByDateClick = {onSortClick}/>
-                {isLoading ? <Loader/> : appContent}
+                {isLoading ? <Loader size = {15}/> : appContent}
             </div>
             <Pagination 
                 className = {styles.pagination}
