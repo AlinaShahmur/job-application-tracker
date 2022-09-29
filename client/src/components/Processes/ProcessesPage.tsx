@@ -27,7 +27,7 @@ export const ProcessesPage: React.FC = () => {
 
     const onClickOpenEditHandler = (process: any) => {
       setIsEditProcessShow(true);
-      localStorage.setItem("editingProcess", process)
+      localStorage.setItem("editingProcess", JSON.stringify(process))
     }
 
     const onCloseEditFormProcess = () => {
