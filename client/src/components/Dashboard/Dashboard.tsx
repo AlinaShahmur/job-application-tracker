@@ -66,7 +66,7 @@ function Dashboard() {
             <h1>Dashboard</h1>
             {percentages.length > 0
             ? withResponseDashboardContent
-            : <Loader/> }
+            : <Loader size = {15}/> }
         </div> 
 
     )
