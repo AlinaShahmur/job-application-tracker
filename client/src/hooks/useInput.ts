@@ -1,26 +1,63 @@
-import { useState } from "react";
+import { useReducer } from "react";
 
+interface InputState {
+    value: string;
+    touched: boolean;
+}
+
+const initialInputState: InputState = {
+    value: "",
+    touched: false
+}
+
+function inputStateReducer(state: any, action: any): InputState {
+    switch (action.type) {
+        case 'SET_VALUE': {
+            return {value: action.val, touched: false};
+        }
+        case 'CHANGE': {
+            return {value: action.val, touched: state.touched};
+        }
+        case 'RESET':
+        default : {
+            return {value: "", touched: false};
+        }
+        case 'BLUR': {
+            return {value: state.value, touched: true};
+        }
+    }
+}
 
 export default function useInput(validatorFunc: any) {
-    const [inputState, setInputState] = useState({value: '', touched: false});
+    const [inputState, dispatchInput] = useReducer(inputStateReducer, initialInputState);
+
     let isInputValid = validatorFunc(inputState.value);
+    
+    let hasError = !isInputValid && inputState.touched;
 
     const setValue = (value: string) => {
-        setInputState({value: value, touched: false});
+        dispatchInput({type:"SET_VALUE", val: value})
     }
 
     const reset = () => {
-        setInputState({value: '', touched: false});
+        dispatchInput({type:"RESET"})
     }
 
     const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) => {
-        setInputState({value: e.target.value, touched:true})
+        console.log("in input change handler");
+        
+        dispatchInput({type:"CHANGE", val: e.target.value})
+    }
+
+    const inputBlurHandler = (value: string) => {
+        dispatchInput({type:"BLUR"})
     }
 
     return {
         enteredValue: inputState.value,
-        isTouched: inputState.touched,
+        inputBlurHandler,
         isInputValid,
+        hasError,
         inputChangeHandler,
         setValue,
         reset

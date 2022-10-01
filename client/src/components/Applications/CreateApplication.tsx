@@ -15,6 +15,7 @@ import Loader from "../UI/Loader";
 
 
 function CreateApplication(props: any) {
+
     const [isAddSourceOpen, setIsAddSourceOpen] = useState(false);
     const [isFormCASending, setIsFormCASending] = useState(false);
     const [sourceOptions, setSourceOptions] = useState<Set<string>>(new Set());
@@ -26,51 +27,53 @@ function CreateApplication(props: any) {
 
     const {
         enteredValue: roleInputValue,
-        isTouched: isRoleTouched,
+        hasError: roleHasError,
         setValue: setRoleValue,
         isInputValid: isRoleValid,
+        inputBlurHandler: roleInputBlurHandler,
         inputChangeHandler: roleInputChangeHandler,
         reset: resetRoleInput
     } = useInput(textValidator);
 
     const {
-        enteredValue: dateInputValue,
-        isTouched: isDateTouched,
-        setValue: setDateValue,
-        isInputValid: isDateValid,
-        inputChangeHandler: dateInputChangeHandler,
-        reset: resetDateInput
-    } = useInput(dateValidator);
-
-    const {
         enteredValue: companyNameInputValue,
-        isTouched: isCompanyNameTouched,
         setValue: setCompanyNameValue,
         isInputValid: isCompanyNameValid,
+        hasError: companyHasError,
+        inputBlurHandler: companyNameInputBlurHandler,
         inputChangeHandler: companyNameInputChangeHandler,
         reset: resetCompanyNameInput
     } = useInput(textValidator);
 
     const {
+        enteredValue: dateInputValue,
+        setValue: setDateValue,
+        isInputValid: isDateValid,
+        hasError: dateHasError,
+        inputChangeHandler: dateInputChangeHandler,
+        reset: resetDateInput
+    } = useInput(dateValidator);
+
+    const {
         enteredValue: sourceNameValue,
-        isTouched: isSourceNameTouched,
         isInputValid: isSourceNameValid,
+        hasError: sourceNameHasError,
         inputChangeHandler: sourceNameInputChangeHandler,
+        inputBlurHandler: sourceNameBlurHandler,
         reset: resetSourceNameInput
     } = useInput(textValidator);
 
     const {
         enteredValue: sourceOptionsValue,
-        isTouched: isSourceOptionsTouched,
         setValue: setSourceOptionsValue,
         isInputValid: isSourceOptionsValid,
+        hasError: sourceOptionsValueHasError,
         inputChangeHandler: sourceOptionsChangeHandler,
         reset: resetSourceOptions
     } = useInput(textValidator);
 
     const {
         enteredValue: fileInputValue,
-        isTouched: isFileInputTouched,
         isInputValid: isFileValid,
         inputChangeHandler: fileInputChangeHandler,
         reset: resetFile
@@ -80,19 +83,20 @@ function CreateApplication(props: any) {
         async function fetchSources() {
             const token = await getIdTokenClaims();
             const res = await fetchData('GET', null, `${BASE_URL}/sources`, token?.__raw, process._id);
-            console.log({res});
             
             setSourceOptions(new Set(res));
         }
         fetchSources();
         if (props.isEdit) setEditFields();
-    }, [])
+        console.log("rendering Create Application");
+        
+    }, []);
 
     const submitFormCAHandler = async (e: SyntheticEvent) => {
         e.preventDefault();
         
 
-        if (isFormCATouched && isFormCAValid) {
+        if (isFormCAValid) {
             setIsFormCASending(true);
             const imageBody = {
                 file: fileInputValue.base64,
@@ -109,7 +113,6 @@ function CreateApplication(props: any) {
                 img: res.url
             };
 
-            console.log({body});
             const token = await getIdTokenClaims();
             await fetchData("POST", JSON.stringify(body), `${BASE_URL}/applications`, token?.__raw, process._id)
             resetFormCAControls();
@@ -153,7 +156,7 @@ function CreateApplication(props: any) {
 
     const submitFormAddResourceHandler = async (e: SyntheticEvent) => {
         e.preventDefault();
-        if (isFormAddSourceValid && isFormAddSourceTouched) {
+        if (isFormAddSourceValid) {
             setAddNewSourceLoading(true);
             resetSourceNameInput();
             setIsFormAddSourceSending(true);
@@ -172,11 +175,9 @@ function CreateApplication(props: any) {
 
     const fileUploadBtnLabel = fileInputValue.name ? fileInputValue.name : "Choose File";
 
-    let isFormCATouched = isRoleTouched && isFileInputTouched && isDateTouched && isSourceOptionsTouched && isCompanyNameTouched;
     let formCAClasses = isFormCASending ? '_sending' : "";
     let isFormCAValid = isRoleValid && isDateValid && isFileValid && isSourceOptionsValid && isCompanyNameValid;
 
-    let isFormAddSourceTouched = isSourceNameTouched;
     let formAddSourceClasses = isFormAddSourceSending ? '_sending' : "";
     let isFormAddSourceValid = isSourceNameValid;
 
@@ -212,6 +213,8 @@ function CreateApplication(props: any) {
                         type = "text"
                         value = {roleInputValue}
                         onChange = {roleInputChangeHandler}
+                        hasError = {roleHasError}
+                        onBlur = {roleInputBlurHandler}
                 />
 
                 <TextInput 
@@ -219,9 +222,12 @@ function CreateApplication(props: any) {
                         label = "Company Name"
                         type = "text"
                         value = {companyNameInputValue}
+                        isValid = {isCompanyNameValid}
                         onChange = {companyNameInputChangeHandler}
+                        hasError = {companyHasError}
+                        onBlur = {companyNameInputBlurHandler}
                 />
-                <div className={styles["form-group"]}>
+                <div className={`${styles["form-group"]} ${dateHasError ?  "invalid" : ""}`}>
                     <label htmlFor="startDateInput">When did you send a CV</label> <br></br>
                     <input type = "date" id = "startDateInput" max={formatDate(new Date())} onChange={dateInputChangeHandler} value = {dateInputValue}></input>
                 </div>
@@ -234,8 +240,8 @@ function CreateApplication(props: any) {
                     <input type = "file" id = "imageInput" accept=".png,.jpeg,.jpg" onChange={chooseFileHandler}></input>
                 </div>
 
-                <div className={styles["form-group"]}>
-                    <label htmlFor="companyNameInput">Where did you find a job?</label> <br />
+                <div className={`${styles["form-group"]} ${sourceOptionsValueHasError ?  "invalid" : ""}`}>
+                    <label htmlFor="optionsDropdown">Where did you find a job?</label> <br />
                     
                     {sourcesDropdown}
                     <div className={styles["add-source-btn"]}>
@@ -271,6 +277,8 @@ function CreateApplication(props: any) {
                                     type = "text"
                                     onChange = {sourceNameInputChangeHandler}
                                     value = {sourceNameValue}
+                                    hasError = {sourceNameHasError}
+                                    onBlur = {sourceNameBlurHandler}
                     />
                     <button type="submit">Add</button>
                 </form>

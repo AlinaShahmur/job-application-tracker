@@ -3,3 +3,7 @@
     padding: 2px;
     margin: 15px;
 }
+
+.invalid {
+    border: 1px solid red;
+}

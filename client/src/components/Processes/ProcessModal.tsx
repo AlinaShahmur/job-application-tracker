@@ -11,18 +11,14 @@ import classes from './ProcessModal.module.css'
 export default function ProcessModal(props: any) {
     const {
         enteredValue: processNameValue,
-        isTouched: isProcessNameTouched,
         isInputValid: isProcessNameValid,
         setValue: setProcessNameValue,
         inputChangeHandler: processNameInputChangeHandler,
+        hasError: processNameHasError,
         reset: resetProcessNameInput
     } = useInput(textValidator);
 
-    const {isAuthenticated, user} = useAuth0();
-    console.log({user});
-    console.log(props.isEdit);
-    
-    
+    const { user} = useAuth0();
     const [isFormSending, setIsFormSending] = useState(false);
     const [process, setProcess] = useState({_id:"", name: ""});
 
@@ -33,19 +29,20 @@ export default function ProcessModal(props: any) {
             setProcess(parsedProcess);
             setProcessNameValue(parsedProcess.name)
         }
+        console.log("Process Modal");
+        
     },[])
 
     const submitHandler = async (e: SyntheticEvent) => {
         e.preventDefault();
 
-        if (isFormAddProcessValid && isFormAddProcessTouched) {
+        if (isFormAddProcessValid) {
             let email  = user?.email;
 
             const createdProcess =  {
                 name: processNameValue,
                 user: email
             };
-            console.log({processNameValue});
             
             const method = props.isEdit ? 'PUT' : 'POST';
             
@@ -58,7 +55,6 @@ export default function ProcessModal(props: any) {
     }
 
     const formAddProcessClasses = isFormSending ? "_sending" : "";
-    const isFormAddProcessTouched = isProcessNameTouched;
     const isFormAddProcessValid = isProcessNameValid;
 
     return (
@@ -72,6 +68,7 @@ export default function ProcessModal(props: any) {
                             type = "text"
                             value = {processNameValue}
                             onChange = {processNameInputChangeHandler}
+                            hasError = {processNameHasError}
                         />
                     
                     <button type="submit">{props.isEdit? "Edit" : "Create"}</button>
