@@ -1,7 +1,8 @@
 import {DB_COLLECTIONS} from "../../utils/constants"
-import mongodb from 'mongodb'
+import mongodb, { ObjectId } from 'mongodb'
 import mongo from './Mongo'
 import { ProcessDoc } from "../../types";
+
 
 
 class Process {
@@ -42,10 +43,16 @@ class Process {
                         .toArray()
     }
     static async deleteOne(process_id) {
-        return mongo
+        try {
+            return mongo
                         .db
                         .collection(DB_COLLECTIONS.PROCESSES)
-                        .deleteOne({_id: process_id})
+                        .deleteOne({_id: new ObjectId(process_id)})
+        } catch (error) {
+            console.error("Error in deleteOne Process", error.message);
+            throw error;
+        }
+
     }
     static async update(process_id: string, process: ProcessDoc) {
         return mongo
