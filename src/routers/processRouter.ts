@@ -1,4 +1,4 @@
-import { createProcess, getProcessesByUserEmail } from '../handlers/processHandler';
+import { createProcess, deleteProcess, getProcessesByUserEmail } from '../handlers/processHandler';
 
 const {Router} = require('express');
 const app = Router();
@@ -16,5 +16,12 @@ app.get('/:userEmail',  getProcessesByUserEmail)
     @path: /
 */
 app.post('/', createProcess)
+
+/*
+    @route: processes
+    @path: /
+    @params: process_id
+*/
+app.delete('/:process_id', deleteProcess)
 
 export default app

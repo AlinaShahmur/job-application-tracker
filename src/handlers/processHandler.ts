@@ -51,3 +51,15 @@ export const updateProcess = async (req, res) =>{
     }
 }
 
+export const deleteProcess = async (req, res) => {
+    try {
+        const { process_id } = req.params;
+        const result = await Process.deleteOne(process_id);
+        console.log({result});
+        res.send({success: true})
+    } catch (error) {
+        console.log("Error in deleteProcess", error);
+        res.status(500).send({success: false, data: error.message})
+    }
+}
+
