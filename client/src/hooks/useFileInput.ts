@@ -16,8 +16,15 @@ export default function useFileInput() {
                                                 base64:""
                                             },
                                             touched: false});
+    let checkValidityResult =  fileValidator(file.value)                                       
+    let isInputValid = checkValidityResult.success;
+    let hasInputFileErrors = !isInputValid && file.touched;
+    console.log({isInputValid});
+    
 
-    let isInputValid = fileValidator(file.value);
+    let errorMessage = checkValidityResult.error;
+    console.log({errorMessage});
+    
 
     const setValue = (value: FileObject) => {
         setFile({value: value, touched: false});
@@ -41,7 +48,9 @@ export default function useFileInput() {
         enteredValue: file.value,
         isTouched: file.touched,
         isInputValid,
+        errorMessage,
         inputChangeHandler,
+        hasInputFileErrors,
         setFile,
         reset
     }

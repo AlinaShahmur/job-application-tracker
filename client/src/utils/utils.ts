@@ -1,5 +1,5 @@
 import { FileObject } from "../types";
-import {  PERMITTED_IMG_FORMATS } from "./constants";
+import {  FILE_INPUT_MESSAGES, MIN_JOB_DESC_SIZE, PERMITTED_IMG_FORMATS } from "./constants";
 
 const pretiffyDate = (date: any) => {
     const dateObj = new Date(date);
@@ -18,18 +18,27 @@ const inputDebouncer = (func: any, delay: number) => {
 
 const fileValidator = (fileObj: FileObject) => {
     const isImage = PERMITTED_IMG_FORMATS.includes(fileObj.type);
-    
+    const isSizeValid = calculateImageSize(fileObj.base64) <= MIN_JOB_DESC_SIZE;
     const hasEmptyValues = Object
                 .entries(fileObj)
                 .some(value => {
-                    return (typeof value == "string" && value ==="" )||value == null
-                });           
-    return isImage && !hasEmptyValues
+                    return (typeof value == "string" && value === "")||value == null
+                });    
+    
+    if (!isImage) return { success:false, error: FILE_INPUT_MESSAGES.INVALID_FORMAT };  
+    if (hasEmptyValues) return { success:false, error: FILE_INPUT_MESSAGES.EMTPY_VALUES };
+    if (!isSizeValid) return { success:false, error: FILE_INPUT_MESSAGES.SIZE_EXCEEDED }; 
+
+    return { success:true, message: "" };
 }
 
-// const dateValidator = (value: string) => {
 
-// }
+const calculateImageSize = (base64Str: any): Number => {
+    let y = 1;
+    const xSize = (base64Str.length * (3 / 4)) - y;
+    return Math.round(xSize / 1024);
+}
+
 
 const formatDate = (dateObject: Date, separator = '-') => {
     let [month, day, year] = dateObject.toLocaleDateString().split('/');
@@ -39,13 +48,8 @@ const formatDate = (dateObject: Date, separator = '-') => {
 }
 
 const dateValidator = (dateString: string) => {
-    console.log(dateString);
-    
     const dateToValidate = new Date(dateString);
-    console.log({dateToValidate});
-    
     const todayDate = new Date();
-    console.log({todayDate});
     return dateToValidate <= todayDate
 }
 
@@ -73,5 +77,6 @@ export {
     emailValidator,
     fileValidator,
     formatDate,
-    dateValidator
+    dateValidator,
+    calculateImageSize
 }
