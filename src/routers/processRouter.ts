@@ -1,4 +1,9 @@
-import { createProcess, deleteProcess, getProcessesByUserEmail } from '../handlers/processHandler';
+import { 
+    createProcess,
+    deleteProcess,
+    getProcessesByUserEmail,
+    updateProcess 
+} from '../handlers/processHandler';
 
 const {Router} = require('express');
 const app = Router();
@@ -16,6 +21,12 @@ app.get('/:userEmail',  getProcessesByUserEmail)
     @path: /
 */
 app.post('/', createProcess)
+
+/*
+    @route: processes
+    @path: /:process_id
+*/
+app.put('/:process_id', updateProcess)
 
 /*
     @route: processes
