@@ -27,7 +27,6 @@ export class Source {
     public async pushNewSource(source_name: string) {
         try {
             const source = await this.getSourceObj();
-            console.log({source});
             let source_id;
 
             if (source === null) {
@@ -41,6 +40,18 @@ export class Source {
         } catch (err) {
             console.error("Error in push source" + err);
             throw err;
+        }
+    }
+
+    public static async deleteSourceObjectByProcessId(process_id: string) {
+        try {
+            return mongo
+                        .db
+                        .collection(DB_COLLECTIONS.SOURCES)
+                        .deleteOne({process_id: new ObjectId(process_id)})
+        } catch (error) {
+            console.error("Error in deleteSourceObject" + error);
+            throw error;
         }
     }
 
