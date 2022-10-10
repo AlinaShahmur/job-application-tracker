@@ -4,7 +4,7 @@ export const BASE_URL = ENV === 'DEV'
                                 ? 'http://localhost:8000/api' 
                                 : '';
 
-export const REDIRECT_URL = "https://d901-77-137-77-246.eu.ngrok.io"
+export const REDIRECT_URL = "https://ff17-77-137-77-246.eu.ngrok.io"
 
 export const STATUS_AND_COLORS: any = {
     fulfilled: '#8ad19d',
@@ -43,3 +43,19 @@ export const PERMITTED_IMG_FORMATS = ['image/jpeg','image/png','image/jpg'];
 
 export const UPLOAD_PRESET = 'job_application_tracker';
 export const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/ds609wv4s/image/upload';
+
+export const PAGE_LIMIT = 2;
+
+export const deleteProcessConfirmation = {
+    title: "Delete process",
+    message: "Permamently delete this process? We cannot restore it once you delete",
+    btnLabel: "Delete"
+}
+
+export const MIN_JOB_DESC_SIZE = 100;
+
+export const FILE_INPUT_MESSAGES = {
+    INVALID_FORMAT: "The file must be format jpeg/jpg/png",
+    SIZE_EXCEEDED: "The image size should be less than 100 KB",
+    EMTPY_VALUES: "One of the file properties was missed: name, mimetype or base"
+}
