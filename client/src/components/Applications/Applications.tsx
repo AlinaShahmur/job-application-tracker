@@ -1,7 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { BASE_URL } from '../../utils/constants';
+import { BASE_URL, PAGE_LIMIT } from '../../utils/constants';
 import { fetchData } from '../../utils/request_client';
 import Loader from '../UI/Loader';
 import Pagination from '../UI/Pagination';
@@ -17,7 +17,7 @@ function Applications() {
     const [applications, setApplications] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [limit, setLimit] = useState(10);
-    const [pageLimit, setPageLimit] = useState(4)
+    //const [pageLimit, setPageLimit] = useState(4)
     const [pages, setPages] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
@@ -64,7 +64,7 @@ function Applications() {
                 className = {styles.pagination}
                 currPage = {currentPage}
                 passParameters = {passCurrentState}
-                pageLimit = {pageLimit}
+                pageLimit = {PAGE_LIMIT}
                 pages = {pages}/>
         </div>
         

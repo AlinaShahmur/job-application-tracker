@@ -5,7 +5,6 @@ import styles from './Pagination.module.css'
 
 function Pagination(props: any) {
     const [currentPage, setCurrentPage] = useState(1);
-    const [pages, setPages] = useState(0);
 
     useEffect(() => {
         props.passParameters(currentPage);
@@ -15,14 +14,11 @@ function Pagination(props: any) {
         setCurrentPage(props.currPage)
     },[props.currPage])
 
-    const passParameters = () => {
-
-    }
     const goToPreviousPage = () => {
         setCurrentPage(currentPage => currentPage-1)
     }
     const getPaginationGroup = () => {
-        let start: number = Math.floor((currentPage - 1)/props.pageLimit) * props.pageLimit;
+        let start: number = Math.floor((currentPage - 1)/props.pageLimit) * props.pageLimit; 
         return new Array(props.pageLimit).fill(null).map((_, idx) => start + idx + 1);
     }
     const goToNextPage = () => {
