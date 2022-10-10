@@ -31,8 +31,12 @@ export async function updateStatus() {
                   
         for (let item of pendingApproval) {
             let currentTime = new Date().getTime();
-            const sortedHistory = item.history.sort((a,b) => a.date.getTime() > b.date.getTime());
-            let lastStatusUpdated = sortedHistory[0].start_date.getTime();
+            console.log("item.history", item.history);
+            
+            const sortedHistory = item.history.sort((a,b) => new Date(a.date).getTime() > new Date(b.date).getTime());
+            console.log({sortedHistory});
+            
+            let lastStatusUpdated = new Date(sortedHistory[0].date).getTime();
             if (currentTime - lastStatusUpdated > THREE_WEEKS) {
                 item.status = STATUS.REJECTED;
                 await Application.update(item._id, item);
