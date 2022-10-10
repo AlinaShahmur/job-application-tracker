@@ -1,6 +1,7 @@
+import Application from "../db/classes/Application";
 import Process from "../db/classes/Process";
+import { Source } from "../db/classes/Source";
 import User from "../db/classes/User";
-import { ProcessDoc } from "../types";
 
 export const getProcessesByUserEmail = async (req, res) =>{
     try {
@@ -35,15 +36,12 @@ export const createProcess = async (req, res) =>{
 
 export const updateProcess = async (req, res) =>{
     try {
+
         const process = req.body;
         const { process_id } = req.params
-        
-        const objToUpdate: ProcessDoc = {
-            name: process.name,
-            user: process.user
-        }
-        await Process.update(process_id, objToUpdate)
-        
+
+        await Process.update(process_id, process);
+
         res.send({success: true})
     } catch (error) {
         console.log("Error in getProcesses", error);
@@ -55,7 +53,12 @@ export const deleteProcess = async (req, res) => {
     try {
         const { process_id } = req.params;
         const result = await Process.deleteOne(process_id);
-        console.log({result});
+
+        if (result.acknowledged) {
+            await Application.deleteByProcessId(process_id);
+            await Source.deleteSourceObjectByProcessId(process_id)
+        }
+
         res.send({success: true})
     } catch (error) {
         console.log("Error in deleteProcess", error);
