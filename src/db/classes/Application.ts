@@ -1,6 +1,6 @@
 import {DB_COLLECTIONS} from "../../utils/constants";
 import mongo from './Mongo';
-import { ApplicationDoc, HistoryDoc } from '../../types';
+import { HistoryDoc } from '../../types';
 import { ObjectId } from "mongodb";
 
 class Application {
@@ -15,7 +15,7 @@ class Application {
 
     async find(limit, skip, searchQuery, sortQuery) {
         try {
-            return await mongo
+            return mongo
                             .db
                             .collection(DB_COLLECTIONS.APPLICATIONS)
                             .find({...searchQuery, process_id: this.process_id})
@@ -30,7 +30,7 @@ class Application {
     }
 
     async findAll() {
-        return await mongo
+        return mongo
                         .db
                         .collection(DB_COLLECTIONS.APPLICATIONS)
                         .find({process_id: this.process_id})
@@ -39,7 +39,7 @@ class Application {
 
     async getTotalCount(query: any) {
         try {
-            return await mongo
+            return mongo
                             .db
                             .collection(DB_COLLECTIONS.APPLICATIONS)
                             .countDocuments({...query, process_id: this.process_id})
@@ -62,7 +62,7 @@ class Application {
         }
 
     }
-    static async update(id, obj: ApplicationDoc) {
+    static async update(id, obj: any) {
         try {
             return await mongo
                             .db
@@ -78,13 +78,25 @@ class Application {
 
     static async deleteById(id) {
         try {
-            return await mongo
+            return mongo
                             .db
                             .collection(DB_COLLECTIONS.APPLICATIONS)
                             .deleteOne({_id: new ObjectId(id)})
         } catch (err) {
             console.error(err);
             throw err
+        }
+    }
+    static async deleteByProcessId(process_id) {
+        try {
+            return mongo
+                    .db
+                    .collection(DB_COLLECTIONS.APPLICATIONS)
+                    .deleteMany({process_id: new ObjectId(process_id)})
+                    
+        } catch(error) {
+            console.error("Error in deleteMany", error);
+            throw error;
         }
     }
 }
