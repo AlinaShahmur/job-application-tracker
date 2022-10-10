@@ -1,6 +1,8 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { SyntheticEvent, useEffect, useRef, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import useInput from "../../hooks/useInput";
+import { processActions } from "../../store/process-store";
 import { BASE_URL } from "../../utils/constants";
 import { fetchData } from "../../utils/request_client";
 import { textValidator } from "../../utils/utils";
@@ -23,6 +25,8 @@ export default function ProcessModal(props: any) {
     const { user} = useAuth0();
     const [isFormSending, setIsFormSending] = useState(false);
     const [process, setProcess] = useState({_id:"", name: ""});
+    const dispatch = useDispatch();
+    
 
     useEffect(() => {
         if (props.isEdit && localStorage.getItem("editingProcess")) {
@@ -30,9 +34,7 @@ export default function ProcessModal(props: any) {
             const parsedProcess: any = JSON.parse(process);
             setProcess(parsedProcess);
             setProcessNameValue(parsedProcess.name)
-        }
-        console.log("Process Modal");
-        
+        }       
     },[])
 
     const submitHandler = async (e: SyntheticEvent) => {
@@ -42,17 +44,24 @@ export default function ProcessModal(props: any) {
             setIsFormSending(true);
             let email  = user?.email;
 
-            const createdProcess =  {
+            const processToSend =  {
                 name: processNameValue,
-                user: email
+                user: email,
             };
             const token = await getIdTokenClaims();
             const method = props.isEdit ? 'PUT' : 'POST';
             
             const URI = props.isEdit && process
                             ? `${BASE_URL}/processes/${process._id}`
-                            : `${BASE_URL}/processes`
-            await fetchData(method,JSON.stringify(createdProcess),URI, token?.__raw);
+                            : `${BASE_URL}/processes`;
+                            
+            const result = await fetchData(method,JSON.stringify(processToSend),URI, token?.__raw);
+            if (!props.isEdit) {
+                const newProcess = {...processToSend, _id: result.process_id };
+                dispatch(processActions.addProcess(newProcess))
+            } else {
+                dispatch(processActions.updateProcess({...processToSend, _id: process._id}))
+            }
             setIsFormSending(false);
             resetProcessNameInput();
         }

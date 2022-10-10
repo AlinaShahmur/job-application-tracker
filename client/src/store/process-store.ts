@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const processesInitialState = {processes: [], currentProcess: null, isFetched: false};
+const processesInitialState: any = {processes: [], currentProcess: null, isFetched: false};
 
 const processSlice = createSlice({
     name: 'process',
@@ -17,6 +17,21 @@ const processSlice = createSlice({
                 copyOfProcesses.splice(index, 1);
                 state.processes = copyOfProcesses;
             }
+        },
+        addProcess(state, action) {
+            const process: any = action.payload;
+            console.log({process});
+            
+            // const processes: any = [...state.processes];
+            // processes.push(process);
+            // state.processes = processes;
+            state.processes.push(process)
+        },
+        updateProcess(state, action) {
+            const process = action.payload;            
+            const foundProcess = state.processes.find((process: any) => process._id === action.payload._id);
+            
+            foundProcess.name = process.name;
         },
         setCurrentProcess(state, action) {
             state.currentProcess = action.payload;
