@@ -54,11 +54,11 @@ class Process {
         }
 
     }
-    static async update(process_id: string, process: ProcessDoc) {
+    static async update(process_id: string, process: any) {
         return mongo
         .db
         .collection(DB_COLLECTIONS.PROCESSES)
-        .updateOne({_id: process_id}, {$set: process})
+        .updateOne({_id: new ObjectId(process_id)}, {$set: process})
     }
 }
 
