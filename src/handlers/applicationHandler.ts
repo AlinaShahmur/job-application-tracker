@@ -75,19 +75,16 @@ export async function createApplication(req: Request,res: Response) {
 export async function updateApplication(req: Request,res: Response){
     try {
         const application = req.body;
+        
         const { id } = req.params;
-        const applicationToUpdate = {
-            role: application.role,
-            start_date: new Date(application.start_date),
-            status: application.status,
-            img: application.img,
-            source: application.source,
-            company_name: application.company_name,
-            history: application.history,
-            process_id: new ObjectId(application.process_id)
+        if (application.process_id) {
+            application.process_id = new ObjectId(application.process_id)
+        } 
+        if (application.start_date) {
+            application.start_date = new Date(application.start_date)
         }
-        await Application.update(id, applicationToUpdate);
-
+        await Application.update(id, application);
+        
         res.send({success: true, data: 'updated'})
     } catch (err){
         res.send({success: false, data: [], message: err})
