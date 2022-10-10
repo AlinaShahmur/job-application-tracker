@@ -50,6 +50,7 @@ function CreateApplication(props: any) {
         setValue: setDateValue,
         isInputValid: isDateValid,
         hasError: dateHasError,
+        inputBlurHandler: dateInputBlurHandler,
         inputChangeHandler: dateInputChangeHandler,
         reset: resetDateInput
     } = useInput(dateValidator);
@@ -69,52 +70,67 @@ function CreateApplication(props: any) {
         isInputValid: isSourceOptionsValid,
         hasError: sourceOptionsValueHasError,
         inputChangeHandler: sourceOptionsChangeHandler,
+        inputBlurHandler: sourceOptionsBlurHandler,
         reset: resetSourceOptions
     } = useInput(textValidator);
 
     const {
         enteredValue: fileInputValue,
+        setFile: setFile, 
         isInputValid: isFileValid,
+        hasInputFileErrors: hasInputFileErrors,
+        errorMessage: fileInputErrorMessage,
         inputChangeHandler: fileInputChangeHandler,
         reset: resetFile
     } = useFileInput();
 
     useEffect(() => {
+        
         async function fetchSources() {
             const token = await getIdTokenClaims();
             const res = await fetchData('GET', null, `${BASE_URL}/sources`, token?.__raw, process._id);
             
             setSourceOptions(new Set(res));
+            
         }
+
         fetchSources();
-        if (props.isEdit) setEditFields();
-        console.log("rendering Create Application");
+        if (props.isEdit) {
+            setEditFields();
+        } else {
+            setSourceOptionsValue("")
+        }
         
     }, []);
 
     const submitFormCAHandler = async (e: SyntheticEvent) => {
         e.preventDefault();
+        console.log( isRoleValid, isDateValid, isFileValid,isSourceOptionsValid, isCompanyNameValid);
         
-
         if (isFormCAValid) {
             setIsFormCASending(true);
+
+            //maxWidth = 650, maxHeight = 560;
             const imageBody = {
-                file: fileInputValue.base64,
+                file:  fileInputValue.base64,
                 upload_preset: UPLOAD_PRESET
             };
-
-            const res = await fetchData("POST", JSON.stringify(imageBody), CLOUDINARY_URL);
+                 
+            const res = await fetchData("POST", JSON.stringify(imageBody), `${CLOUDINARY_URL}`);
+            console.log("cloudinary res", res);
+            
             const body = {
                 role: roleInputValue,
                 start_date: dateInputValue,
                 source: sourceOptionsValue,
                 company_name: companyNameInputValue,
                 process_id:process._id,
-                img: res.url
+                img: res.secure_url
             };
 
             const token = await getIdTokenClaims();
             await fetchData("POST", JSON.stringify(body), `${BASE_URL}/applications`, token?.__raw, process._id)
+            
             resetFormCAControls();
             setIsFormCASending(false);
 
@@ -152,6 +168,7 @@ function CreateApplication(props: any) {
         setCompanyNameValue(props.application.company_name);
         setDateValue(props.application.start_date.split("T")[0]);
         setSourceOptionsValue(props.application.source);
+        //setFile({})
     }
 
     const submitFormAddResourceHandler = async (e: SyntheticEvent) => {
@@ -167,7 +184,7 @@ function CreateApplication(props: any) {
             await fetchData('POST', JSON.stringify(body), `${BASE_URL}/sources`, token?.__raw, process._id);
             const updatedSourceList = new Set(sourceOptions).add(sourceNameValue);
             
-            setSourceOptions(updatedSourceList)
+            setSourceOptions(updatedSourceList);
             setIsFormAddSourceSending(false);
             setAddNewSourceLoading(false);
         }
@@ -199,14 +216,15 @@ function CreateApplication(props: any) {
 
     const sourceList = renderSourceList(sourceOptions);
     const sourcesDropdown = sourceOptions.size > 0 
-                                ? <select id="optionsDropdown" className='dropdown' onChange={sourceOptionsChangeHandler} value = {sourceOptionsValue}>
+                                ? <select id="optionsDropdown" className='dropdown' onChange={sourceOptionsChangeHandler} onBlur = {sourceOptionsBlurHandler} value = {sourceOptionsValue}>
+                                        <option value = ""></option>
                                         {sourceList}
                                     </select>
                                 : <span className="small-text-note">You have no sources yet. Click on "+" to create one</span>
 
     const createApplicationForm = (
         <form onSubmit={submitFormCAHandler} className= {`${styles["create-app-form"]} ${formCAClasses}`} >
-                <h3>Create New Application</h3>
+                <h3>{props.isEdit ? "Edit" : "Create New"} Application</h3>
                 <TextInput 
                         id = "roleInput"
                         label = "Role"
@@ -229,15 +247,16 @@ function CreateApplication(props: any) {
                 />
                 <div className={`${styles["form-group"]} ${dateHasError ?  "invalid" : ""}`}>
                     <label htmlFor="startDateInput">When did you send a CV</label> <br></br>
-                    <input type = "date" id = "startDateInput" max={formatDate(new Date())} onChange={dateInputChangeHandler} value = {dateInputValue}></input>
+                    <input type = "date" id = "startDateInput" max={formatDate(new Date())} onChange={dateInputChangeHandler} onBlur = {dateInputBlurHandler} value = {dateInputValue}></input>
                 </div>
 
      
-                <div className={styles["form-group"]}>
+                <div className={`${styles["form-group"]} ${hasInputFileErrors ?  "invalid" : ""}`}>
 
                     <p>Upload a job description</p>
                     <label htmlFor="imageInput" className={styles["label-file-upload"]}>{fileUploadBtnLabel}</label> <br></br>
                     <input type = "file" id = "imageInput" accept=".png,.jpeg,.jpg" onChange={chooseFileHandler}></input>
+                    {hasInputFileErrors && <p className = 'error-text'>{fileInputErrorMessage}</p>}
                 </div>
 
                 <div className={`${styles["form-group"]} ${sourceOptionsValueHasError ?  "invalid" : ""}`}>
@@ -272,13 +291,13 @@ function CreateApplication(props: any) {
                     />   
                     <h3>Add a new source</h3>
                     <TextInput  
-                                    id = "newSource"
-                                    label = "Source Name"
-                                    type = "text"
-                                    onChange = {sourceNameInputChangeHandler}
-                                    value = {sourceNameValue}
-                                    hasError = {sourceNameHasError}
-                                    onBlur = {sourceNameBlurHandler}
+                        id = "newSource"
+                        label = "Source Name"
+                        type = "text"
+                        onChange = {sourceNameInputChangeHandler}
+                        value = {sourceNameValue}
+                        hasError = {sourceNameHasError}
+                        onBlur = {sourceNameBlurHandler}
                     />
                     <button type="submit">Add</button>
                 </form>
