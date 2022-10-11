@@ -3,8 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { processActions } from "../../store/process-store";
-import { BASE_URL, deleteProcessConfirmation } from "../../utils/constants";
+import { BASE_URL } from "../../utils/constants";
 import { fetchData } from "../../utils/request_client";
+import { buildDeleteConfirmationObject } from "../../utils/utils";
 import CreateApplication from "../Applications/CreateApplication";
 import Alert from "../UI/Alert";
 import styles from './ProcessPage.module.css'
@@ -40,7 +41,7 @@ export default function ProcessPage(props: any) {
                 <button onClick={() => setIsCreateApplicationOpen(true)}>Create Application</button>
                 {isCreateApplicationOpen && <CreateApplication isEdit = {false} onClose = {() => setIsCreateApplicationOpen(false)}/>}
                 {isDeleteConfirmationOpen && <Alert 
-                                                {...deleteProcessConfirmation} 
+                                                {...buildDeleteConfirmationObject('process')} 
                                                 onBtnClick = {deleteProcessHandler} 
                                                 onClose = {() => setIsDeleteConfirmationOpen(false)}
                                             />}

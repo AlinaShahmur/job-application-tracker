@@ -68,6 +68,14 @@ const emailValidator = (value: string) => {
     return /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value)
 }
 
+const buildDeleteConfirmationObject = (subject: string) => {
+    return {
+        title: `Delete ${subject}`,
+        message: `Permamently delete this ${subject}? We cannot restore it once you delete`,
+        btnLabel: "Delete"
+    }
+}
+
 export {
     pretiffyDate,
     inputDebouncer, 
@@ -78,5 +86,6 @@ export {
     fileValidator,
     formatDate,
     dateValidator,
-    calculateImageSize
+    calculateImageSize,
+    buildDeleteConfirmationObject
 }

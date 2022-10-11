@@ -46,12 +46,6 @@ export const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/ds609wv4s/image/u
 
 export const PAGE_LIMIT = 2;
 
-export const deleteProcessConfirmation = {
-    title: "Delete process",
-    message: "Permamently delete this process? We cannot restore it once you delete",
-    btnLabel: "Delete"
-}
-
 export const MIN_JOB_DESC_SIZE = 100;
 
 export const FILE_INPUT_MESSAGES = {
