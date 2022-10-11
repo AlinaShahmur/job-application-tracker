@@ -10,8 +10,7 @@ export default function Processes(props: any) {
         <ul>
             {processes.map((process: any) => (
                 <Process 
-                    key = {process._id} 
-                    onClickEditHandler = {(process: any) => props.onClickOpenEditHandler(process)} 
+                    key = {process._id}  
                     process = {process}
                 />
             ))}

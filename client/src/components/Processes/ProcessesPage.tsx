@@ -11,10 +11,10 @@ import ErrorBoundary from "../../utils/error-boundary";
 
 export const ProcessesPage: React.FC = () => {
     const { user, getIdTokenClaims  }: any = useAuth0();
+    
     const dispatch = useDispatch();
     const processes: any = useSelector((state: any) => state.process.processes);
     const [isCreateProcessShow, setIsCreateProcessShow] = useState(false);
-    const [isEditProcessShow, setIsEditProcessShow] = useState(false);
   
     useEffect(() => {
       const getProcesses = async function() {
@@ -30,24 +30,13 @@ export const ProcessesPage: React.FC = () => {
       getProcesses();
     },[]);
 
-    const onClickOpenEditHandler = (process: any) => {
-      setIsEditProcessShow(true);
-      localStorage.setItem("editingProcess", JSON.stringify(process))
-    }
-
-    const onCloseEditFormProcess = () => {
-      setIsEditProcessShow(false);
-      if (localStorage.getItem("editingProcess")) localStorage.removeItem("editingProcess");
-    }
-
     return (
       <ErrorBoundary>
         <div className={classes['process-page']}>
             <h1>Welcome, {user.name}</h1>
             <h3>My opened job search processes:</h3>
-            <Processes onClickOpenEditHandler = {onClickOpenEditHandler}/>
+            <Processes/>
             {isCreateProcessShow && <ProcessModal isEdit = {false} onClose = {() =>  setIsCreateProcessShow(false)}/>}
-            {isEditProcessShow && <ProcessModal isEdit = {true} onClose = {onCloseEditFormProcess} />}
             <button className={classes['create-new-btn']} onClick={() => setIsCreateProcessShow(true)}>Create New</button>
         </div>
         </ErrorBoundary>
