@@ -1,21 +1,37 @@
 
+import { useAuth0 } from "@auth0/auth0-react";
 import { SyntheticEvent, useState } from "react";
-import { useLocation } from "react-router-dom";
-import {  ICONS } from "../../utils/constants";
-import { pretiffyDate } from "../../utils/utils";
+import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import {  BASE_URL, ICONS } from "../../utils/constants";
+import { fetchData } from "../../utils/request_client";
+import { buildDeleteConfirmationObject, pretiffyDate } from "../../utils/utils";
 import SvgIcon from "../Icons/SvgIcon";
+import Alert from "../UI/Alert";
 import ImageViewer from "../UI/ImageViewer";
+import RoundButton from "../UI/RoundButton";
+import AddStepModal from "./AddEvent";
 import styles from './Application.module.css'
 import CreateApplication from "./CreateApplication";
 
 function Application() {
+    const navigate: any = useNavigate();
     const location: any = useLocation();
+    
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
-    const [isEditApplicationOpen, setIsEditApplicationOpen] = useState(false)
+    const [isEditApplicationOpen, setIsEditApplicationOpen] = useState(false);
+    const [isAddStepModalOpen, setAddStepModalOpen] = useState(false);
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
+
+    const { getIdTokenClaims } = useAuth0();
+
+    const process = useSelector((state: any) => state.process.currentProcess);
     const { item } = location.state;
 
-    const deleteBtnClickHandler = (e: SyntheticEvent) => {
-
+    const deleteBtnClickHandler = async (e: SyntheticEvent) => {
+        const token = await getIdTokenClaims();
+        await fetchData("DELETE",null,`${BASE_URL}/applications/${item._id}`, token?.__raw);
+        navigate(`/${process._id}/applications`);
     }
 
     return (
@@ -27,7 +43,7 @@ function Application() {
                                    />}
         <div className = {styles.application}>
                 <div className={styles["common-information"]}>
-                    <h1>Commmon Information</h1>
+                    <h1>Common Information</h1>
                     <h3>{item.role} - {item.company_name}</h3> 
                     <p>{item.status}</p>
 
@@ -38,10 +54,22 @@ function Application() {
                             />
                     </button>
                     <button onClick = {() => setIsEditApplicationOpen(true)} className = "success">Edit</button>
-                    {/* <button onClick = {deleteBtnClickHandler} className = "danger">Delete</button> */}
+                    <button onClick = {() => setIsDeleteConfirmationOpen(true)} className = "danger">Delete</button>
                 </div>
                 <div>
-                    <h1>History</h1>
+                    <div className={styles["history-header"]}>
+                        <h1>History</h1>
+                        <RoundButton 
+                                viewBox = {ICONS.viewBox.plus_icon} 
+                                path = {ICONS.path.plus_icon}
+                                onClick = {() => setAddStepModalOpen(true)} 
+                                background = "#339966" 
+                                color = "#FFFFFF" 
+                            >
+                        </RoundButton>
+                    </div>
+
+                    
                     <div className={styles.timeline}>
                      {item.history.map((event: any, index: any) => (
                                     <div key = {event._id} className = {`${styles['timeline-container']} ${index % 2 === 0 ? styles['right'] : styles['left']}`}>
@@ -56,7 +84,22 @@ function Application() {
                     </div>
                 </div>
         </div>
-        {isImageModalOpen && <ImageViewer src = {item.img} onClose = {() => setIsImageModalOpen(false)}/>}
+        {isImageModalOpen && <ImageViewer 
+                                src = {item.img} 
+                                onClose = {() => setIsImageModalOpen(false)}
+                            />}
+        {isAddStepModalOpen && <AddStepModal 
+                                onClose = {() => setAddStepModalOpen(false)} 
+                                application_id = {item._id} 
+                                history = {item.history} 
+                                status = {item.status}
+                                />}
+        {isDeleteConfirmationOpen && <Alert 
+                                                {...buildDeleteConfirmationObject('application')} 
+                                                onBtnClick = {deleteBtnClickHandler} 
+                                                onClose = {() => setIsDeleteConfirmationOpen(false)}
+                                            />}       
+    
     </div>
 
     )

@@ -10,6 +10,12 @@
     background-color: white;
 }
 
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .timeline {
     position: relative;
     max-width: 300px;
