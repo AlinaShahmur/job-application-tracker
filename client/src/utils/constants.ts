@@ -1,7 +1,7 @@
 export const ENV = 'DEV'
 
 export const BASE_URL = ENV === 'DEV' 
-                                ? 'http://localhost:8000/api' 
+                                ? 'http://localhost:8000' 
                                 : '';
 
 export const REDIRECT_URL = "https://ff17-77-137-77-246.eu.ngrok.io"

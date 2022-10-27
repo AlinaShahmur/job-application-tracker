@@ -27,7 +27,7 @@ function Applications() {
     useEffect( () => {
         async function getApplications() {
             const token: any = await getIdTokenClaims();
-            const url = `${BASE_URL}/applications?skip=${(currentPage-1)*limit}&limit=${limit}&queryString=${searchQuery}&sortType=${isUpSort ? 'desc' : 'asc'}`
+            const url = `${BASE_URL}/api/applications?skip=${(currentPage-1)*limit}&limit=${limit}&queryString=${searchQuery}&sortType=${isUpSort ? 'desc' : 'asc'}`
             const res = await fetchData('get', null, url, token.__raw, process._id);
             
             setPages(Math.ceil(res.totalItems / limit))

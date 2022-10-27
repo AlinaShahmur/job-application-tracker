@@ -16,7 +16,7 @@ function Dashboard() {
     useEffect(() => {
         const fetchApplications = async () => {
             const token: any = await getIdTokenClaims();                
-            const res = await fetchData('GET', null,`${BASE_URL}/sources/percentages`, token.__raw, process._id);
+            const res = await fetchData('GET', null,`${BASE_URL}/api/sources/percentages`, token.__raw, process._id);
             console.log({res});
             setPercentages(res.percentage);
         }

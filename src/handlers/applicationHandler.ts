@@ -94,8 +94,10 @@ export async function updateApplication(req: Request,res: Response){
 
 export async function deleteApplication(req: Request,res: Response) {
     try {
-        const {id} = req.params
-        await Application.deleteById(id);
+        const {id} = req.params;
+
+        const status = await Application.deleteById(id);
+         console.log({status});
         res.send({success: true, data: 'Deleted'})
     } catch (err){
         res.send({success: false, data: [], message: err})

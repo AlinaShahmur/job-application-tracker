@@ -8,6 +8,7 @@ import processRouter from './routers/processRouter';
 import sourcesRouter from './routers/sourcesRouter';
 import mongoDb from './db/classes/Mongo'
 import bodyParser from 'body-parser';
+import path from 'path';
 
 
 import { updateStatus } from './utils/dbOperations';
@@ -35,6 +36,13 @@ app.use('/api/applications',auth, applicationRouter);
 app.use('/api/users', auth, userRouter);
 app.use('/api/processes', auth, processRouter);
 app.use('/api/sources', auth, sourcesRouter);
+
+if (process.env.NODE_ENV === 'production') {
+    app.use('/', express.static(path.join(__dirname, 'client', 'build')));
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    })
+}
 
 app.listen(port,async () => {
     try {

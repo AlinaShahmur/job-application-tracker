@@ -88,7 +88,7 @@ function CreateApplication(props: any) {
         
         async function fetchSources() {
             const token = await getIdTokenClaims();
-            const res = await fetchData('GET', null, `${BASE_URL}/sources`, token?.__raw, process._id);
+            const res = await fetchData('GET', null, `${BASE_URL}/api/sources`, token?.__raw, process._id);
             
             setSourceOptions(new Set(res));
             
@@ -129,7 +129,7 @@ function CreateApplication(props: any) {
             };
 
             const token = await getIdTokenClaims();
-            await fetchData("POST", JSON.stringify(body), `${BASE_URL}/applications`, token?.__raw, process._id)
+            await fetchData("POST", JSON.stringify(body), `${BASE_URL}/api/applications`, token?.__raw, process._id)
             
             resetFormCAControls();
             setIsFormCASending(false);
@@ -181,7 +181,7 @@ function CreateApplication(props: any) {
             const token = await getIdTokenClaims();
             const body = {source_name: sourceNameValue};
 
-            await fetchData('POST', JSON.stringify(body), `${BASE_URL}/sources`, token?.__raw, process._id);
+            await fetchData('POST', JSON.stringify(body), `${BASE_URL}/api/sources`, token?.__raw, process._id);
             const updatedSourceList = new Set(sourceOptions).add(sourceNameValue);
             
             setSourceOptions(updatedSourceList);

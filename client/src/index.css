@@ -99,7 +99,7 @@ form._sending::after {
   background-color: #8a996c
 }
 
-.invalid input {
+.invalid input, .invalid select {
   border: 1px solid #b40e0e;
   background-color: #fddddd;
 }
@@ -111,4 +111,8 @@ form._sending::after {
 
 .error-text {
   color: #b40e0e;
+}
+
+.form {
+  text-align: center;
 }

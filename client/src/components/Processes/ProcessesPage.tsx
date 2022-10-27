@@ -22,7 +22,7 @@ export const ProcessesPage: React.FC = () => {
         console.log({processes});
         
         if (!processes.isFetched) {
-          const data = await fetchData('get',null,`${BASE_URL}/processes/${user.email}`, token.__raw);
+          const data = await fetchData('get',null,`${BASE_URL}/api/processes/${user.email}`, token.__raw);
           dispatch(processActions.initialLoading(data));
         }
 

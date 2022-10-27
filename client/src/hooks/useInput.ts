@@ -30,6 +30,7 @@ function inputStateReducer(state: any, action: any): InputState {
 
 export default function useInput(validatorFunc: any) {
     const [inputState, dispatchInput] = useReducer(inputStateReducer, initialInputState);
+    
 
     let isInputValid = validatorFunc(inputState.value);
     
@@ -43,13 +44,12 @@ export default function useInput(validatorFunc: any) {
         dispatchInput({type:"RESET"})
     }
 
-    const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) => {
-        console.log("in input change handler");
-        
+    const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
+
         dispatchInput({type:"CHANGE", val: e.target.value})
     }
 
-    const inputBlurHandler = (value: string) => {
+    const inputBlurHandler = () => {
         dispatchInput({type:"BLUR"})
     }
 

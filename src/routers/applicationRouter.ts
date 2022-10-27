@@ -1,4 +1,4 @@
-import { createApplication, getAllItems, getPaginatedItems, updateApplication } from '../handlers/applicationHandler';
+import { createApplication, deleteApplication, getAllItems, getPaginatedItems, updateApplication } from '../handlers/applicationHandler';
 const {Router} = require('express');
 const app = Router();
 
@@ -33,6 +33,14 @@ app.post('/', createApplication);
 */
 
 app.put('/:id', updateApplication);
+
+/*
+@route: applications
+@path: /
+@params: id
+*/
+
+app.delete('/:id', deleteApplication);
 
 
 

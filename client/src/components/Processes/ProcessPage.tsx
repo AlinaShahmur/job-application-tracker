@@ -27,7 +27,7 @@ export default function ProcessPage(props: any) {
 
     const deleteProcessHandler = async () => {
         const token = await getIdTokenClaims();
-        await fetchData("DELETE",null,`${BASE_URL}/processes/${process._id}`, token?.__raw);
+        await fetchData("DELETE",null,`${BASE_URL}/api/processes/${process._id}`, token?.__raw);
         dispatch(processActions.deleteProcess(process._id));
         navigate("/");
         

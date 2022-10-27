@@ -25,10 +25,17 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "dev": "SET HTTPS=true SSL_CRT_FILE=localhost1.cer SSL_KEY_FILE=localhost-key.pem && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+
+  "engines": {
+    "npm": "6.14.8",
+    "node": "14.x"
+  },
+  "proxy":"localhost:8000",
   "eslintConfig": {
     "extends": [
       "react-app",

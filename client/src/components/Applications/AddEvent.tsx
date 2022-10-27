@@ -53,7 +53,7 @@ function AddStepModal(props: any){
                 ]
             }    
             
-            await fetchData('PUT', JSON.stringify(body), `${BASE_URL}/applications/${props.application_id}`, token?.__raw);    
+            await fetchData('PUT', JSON.stringify(body), `${BASE_URL}/api/applications/${props.application_id}`, token?.__raw);    
             resetForm();
             setIsLoading(false);
         }

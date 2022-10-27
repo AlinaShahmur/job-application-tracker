@@ -52,8 +52,8 @@ export default function ProcessModal(props: any) {
             const method = props.isEdit ? 'PUT' : 'POST';
             
             const URI = props.isEdit && process
-                            ? `${BASE_URL}/processes/${process._id}`
-                            : `${BASE_URL}/processes`;
+                            ? `${BASE_URL}/api/processes/${process._id}`
+                            : `${BASE_URL}/api/processes`;
                             
             const result = await fetchData(method,JSON.stringify(processToSend),URI, token?.__raw);
             if (!props.isEdit) {

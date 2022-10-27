@@ -30,7 +30,7 @@ function Application() {
 
     const deleteBtnClickHandler = async (e: SyntheticEvent) => {
         const token = await getIdTokenClaims();
-        await fetchData("DELETE",null,`${BASE_URL}/applications/${item._id}`, token?.__raw);
+        await fetchData("DELETE",null,`${BASE_URL}/api/applications/${item._id}`, token?.__raw);
         navigate(`/${process._id}/applications`);
     }
 

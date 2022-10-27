@@ -7,3 +7,5 @@ client/.env
 client/node_modules
 client/package-lock.json
 client/dist
+client/localhost1.cer
+client/localhost-key.pem

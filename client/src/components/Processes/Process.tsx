@@ -42,7 +42,7 @@ export default function Process(props: any) {
             };
             const token = await getIdTokenClaims();
             
-            const URI = `${BASE_URL}/processes/${process._id}`
+            const URI = `${BASE_URL}/api/processes/${process._id}`
 
                             
             const result = await fetchData('PUT',JSON.stringify(processToSend),URI, token?.__raw);
