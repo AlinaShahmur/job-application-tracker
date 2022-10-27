@@ -4,7 +4,7 @@ export const BASE_URL = ENV === 'DEV'
                                 ? 'http://localhost:8000' 
                                 : '';
 
-export const REDIRECT_URL = "https://ff17-77-137-77-246.eu.ngrok.io"
+export const REDIRECT_URL = "https://jobs-applications-tracker.herokuapp.com/"
 
 export const STATUS_AND_COLORS: any = {
     fulfilled: '#8ad19d',
