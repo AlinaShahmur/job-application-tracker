@@ -6,7 +6,7 @@ interface IState {
 }
 
 interface IProps {
-    children: JSX.Element;
+    children: JSX.Element | JSX.Element[];
 }
 
 class ErrorBoundary extends React.Component<IProps,IState>{
