@@ -21,10 +21,6 @@ const CronJob = cron.CronJob;
 
 const port = process.env.PORT || 8000;
 
-app.get('/', (req,res) => {
-    res.send('Job Application Tracker')
-})
-
 app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -43,6 +39,10 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
     })
 }
+
+app.get('/', (req,res) => {
+    res.send('Job Application Tracker')
+})
 
 app.listen(port,async () => {
     try {
