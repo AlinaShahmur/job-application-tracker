@@ -5,7 +5,11 @@ interface IState {
     hasError:boolean;
 }
 
-class ErrorBoundary extends React.Component<{},IState>{
+interface IProps {
+    children: JSX.Element;
+}
+
+class ErrorBoundary extends React.Component<IProps,IState>{
     
     constructor(props: any) {
         super(props);
