@@ -1,8 +1,7 @@
-export const ENV = 'DEV'
+export const ENV = 'PROD'
 
-export const BASE_URL = ENV === 'DEV' 
-                                ? 'http://localhost:8000' 
-                                : '';
+//export const BASE_URL = 'http://localhost:8000' //in dev mode
+export const BASE_URL = '' //in prod mode
 
 export const REDIRECT_URL = "https://jobs-applications-tracker.herokuapp.com/"
 
