@@ -1,12 +1,4 @@
-import { readFileSync } from 'fs';
 const jwt = require('jsonwebtoken');
-import path from 'path';
-
-const certPath = path.join( __dirname, '../../certs/public.key');
-const publicKey = process.env.PUBLIC_KEY;
-console.log({publicKey});
-const cert = readFileSync(certPath, 'utf-8');
-console.log({cert});
 
 
 export function auth(req, res, next) {
