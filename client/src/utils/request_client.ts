@@ -5,9 +5,11 @@ const fetchData = async (method: any, body: any, url: string, token?: any, proce
         let options : any = {
             method,
             headers: {
-                "Authorization":token,
                 "Content-type":"application/json"
             }
+        }
+        if (token) {
+            options.headers['Authorization'] = token;
         }
         if (process_id) {
             options.headers['process_id'] = process_id; 
