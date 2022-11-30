@@ -34,7 +34,7 @@ button {
   font-size: 15px;
 }
 
-button:hover {
+button:hover, a:hover {
   opacity: 0.8;
 }
 

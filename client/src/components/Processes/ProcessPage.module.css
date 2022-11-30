@@ -1,5 +1,16 @@
 .process-page {
     display: flex;
+    flex-direction: column;
     justify-content: space-around;
     align-items: center;
+}
+
+
+.process-page a {
+    padding: 10px 12px;
+    display: block;
+}
+
+.process-action-btn { 
+    background-color: white;
 }
