@@ -40,7 +40,7 @@ export default function ProcessPage(props: any) {
             <div className = {styles["process-page"]}>
                 <ul>
                     <ItemWrapper>
-                            <Link to = {`${location.pathname}/applications`} state = {{process}}>
+                            <Link to = {`${location.pathname}/applications`} state = {{process}} >
                                 Applications   
                                 <SvgIcon path = {ICONS.path.file_icon}
                                     style = {{width: 13, height: 13, fill: "#000000", marginLeft: 10}}
@@ -52,7 +52,7 @@ export default function ProcessPage(props: any) {
 
                     <ItemWrapper>
 
-                        <Link to = {`${location.pathname}/dashboard`} state = {{process}}>
+                        <Link to = {`${location.pathname}/dashboard`} state = {{process}} className={styles["process-action-btn"]}>
                             Dashboard                           
                             <SvgIcon path = {ICONS.path.dashboard_icon}
                                 style = {{width: 13, height: 13, fill: "#000000", marginLeft: 10}}

@@ -14,3 +14,9 @@
 .process-action-btn { 
     background-color: white;
 }
+
+.process-action-btn:hover svg{
+    fill: red;
+    transform: scale(2);
+    transition: all 0.5s ease-in-out;
+}
