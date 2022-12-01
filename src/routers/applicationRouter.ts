@@ -1,9 +1,13 @@
-import { createApplication, deleteApplication, getAllItems, getPaginatedItems, updateApplication } from '../handlers/applicationHandler';
+import { createApplication, deleteApplication, getAllItems, getApplicationsByStatuses, getPaginatedItems, updateApplication } from '../handlers/applicationHandler';
 const {Router} = require('express');
 const app = Router();
 
 
-
+/*
+@route: applications
+@path: /byStatuses
+*/
+app.get('/byStatuses', getApplicationsByStatuses);
 
 /*
 @route: applications

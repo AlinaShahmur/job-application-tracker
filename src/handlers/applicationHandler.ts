@@ -41,6 +41,24 @@ export async function getPaginatedItems(req: Request,res: Response) {
         res.send({success: false, data: [], message: err})
     }
 }
+
+export async function getApplicationsByStatuses(req: Request, res: Response) {
+    try {
+        const process_id: any = req.headers["process_id"];
+
+        const application = new Application(); 
+        application.process_id = new ObjectId(process_id);
+        const applications = await application.findAll();
+
+        const rejected = applications.filter(application => application.status === 'rejected').length;
+        const pending = applications.filter(application => application.status === 'pending').length;
+
+        res.send({success: true, data: { rejected, pending }})
+    } catch (err) {
+        res.send({success: false, data: [], message: err})
+    }
+}
+
 export async function createApplication(req: Request,res: Response) {
     try {
         const application = req.body;
