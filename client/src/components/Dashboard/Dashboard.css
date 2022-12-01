@@ -8,3 +8,9 @@
 .dashboard__item {
     width: 50%;
 }
+
+.dashboard-diagrams {
+    display: grid;
+    grid-template-columns: auto auto;
+    margin: 50px;
+}
