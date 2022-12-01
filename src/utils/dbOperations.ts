@@ -2,7 +2,7 @@
 import Application from '../db/classes/Application';
 import mongo from '../db/classes/Mongo';
 
-import { DB_COLLECTIONS, sortTypes, STATUS, THREE_WEEKS } from "./constants"
+import { DB_COLLECTIONS, sortTypes, STATUS, FOUR_WEEKS } from "./constants"
 
 export const buildMongoQuery = (queryString, fields) => {
     const regexToMatch = queryString.length > 0 ?
@@ -31,13 +31,11 @@ export async function updateStatus() {
                   
         for (let item of pendingApproval) {
             let currentTime = new Date().getTime();
-            console.log("item.history", item.history);
             
             const sortedHistory = item.history.sort((a,b) => new Date(a.date).getTime() > new Date(b.date).getTime());
-            console.log({sortedHistory});
             
             let lastStatusUpdated = new Date(sortedHistory[0].date).getTime();
-            if (currentTime - lastStatusUpdated > THREE_WEEKS) {
+            if (currentTime - lastStatusUpdated > FOUR_WEEKS) {
                 item.status = STATUS.REJECTED;
                 await Application.update(item._id, item);
             }

@@ -1,4 +1,4 @@
-export const THREE_WEEKS = 1814400000
+export const FOUR_WEEKS = 604800000 * 4;
 export const STATUS = {
     FULFILLED: 'fullfilled',
     PENDING: 'pending',
