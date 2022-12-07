@@ -5,7 +5,6 @@ import * as V from 'victory'
 import { VictoryBar } from 'victory';
 import { BASE_URL } from '../../utils/constants';
 import { fetchData } from '../../utils/request_client';
-import Loader from '../UI/Loader';
 
 export default function ApplicationCorrelation() {
     const { getIdTokenClaims } = useAuth0();
@@ -23,11 +22,8 @@ export default function ApplicationCorrelation() {
 
     const hasResponses = percentages.some((item: any) => item.percentage > 0);
     
-    const withResponseDashboardContent = hasResponses 
-                                        ? (<div className = 'dashboard__item dashboard__without-response'>
-
-                                            <h3>The correlation between total amount of applications and applications with response in the "Source" context </h3>
-                                            <V.VictoryChart domainPadding={10} theme={V.VictoryTheme.material}>
+    const withResponseDashboardContent = hasResponses ?
+                                         (<V.VictoryChart domainPadding={10} theme={V.VictoryTheme.material}>
                                                 <V.VictoryAxis
                                                     tickValues={[1, 2, 3, 4]}
                                                     tickFormat={percentages.map((percentage: any) => percentage.source)}
@@ -56,15 +52,15 @@ export default function ApplicationCorrelation() {
                                                     x = 'source'
                                                     y = 'percentage'
                                                 />
-                                            </V.VictoryChart>
-                                            </div>) 
-                                            : <h3>You have no applications with reponses</h3>;
+                                            </V.VictoryChart>) 
+                                            : <p>You have no applications with reponses</p>;
                                     
     return (
         <div>
-            {percentages.length > 0
-                ? withResponseDashboardContent
-                : <Loader size = {15}/> }
+            <div className = 'dashboard__item'>
+                <h3>The correlation between total amount of applications and applications with response in the "Source" context </h3>
+                {withResponseDashboardContent}
+            </div>
         </div>
     )
 }
