@@ -1,6 +1,9 @@
 body {
   margin: 0;
-
+  height: 100vh;
+  background-image: url(../public/chart-line-solid.svg), url(../public/folder-open-regular.svg);
+  background-position: 10% 25%,90% 75%;
+  background-repeat: no-repeat;
 }
 
 * {
