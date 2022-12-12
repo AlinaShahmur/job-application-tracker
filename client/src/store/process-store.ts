@@ -7,8 +7,7 @@ const processSlice = createSlice({
     initialState: processesInitialState,
     reducers: {
         initialLoading(state, action) {
-            state.processes = action.payload // it's allowed because in redux-toolkit we can't affect to state directly (it makes copy of the current state)
-            state.isFetched = true
+            state.processes = action.payload 
         },
         deleteProcess(state, action) {
             const copyOfProcesses = [...state.processes];
@@ -20,11 +19,6 @@ const processSlice = createSlice({
         },
         addProcess(state, action) {
             const process: any = action.payload;
-            console.log({process});
-            
-            // const processes: any = [...state.processes];
-            // processes.push(process);
-            // state.processes = processes;
             state.processes.push(process)
         },
         updateProcess(state, action) {
