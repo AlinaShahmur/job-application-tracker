@@ -2,9 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import useInput from "../../hooks/useInput";
-import { processActions } from "../../store/process-store";
-import { BASE_URL } from "../../utils/constants";
-import { fetchData } from "../../utils/request_client";
+import { addProcess, updateProcess } from "../../store/process-actions";
 import { textValidator } from "../../utils/utils";
 import Loader from "../UI/Loader";
 import Modal from "../UI/Modal";
@@ -24,7 +22,6 @@ export default function ProcessModal(props: any) {
 
     const { user} = useAuth0();
     const [isFormSending, setIsFormSending] = useState(false);
-    const [process, setProcess] = useState({_id:"", name: ""});
     const dispatch = useDispatch();
     
 
@@ -32,7 +29,6 @@ export default function ProcessModal(props: any) {
         if (props.isEdit && localStorage.getItem("editingProcess")) {
             const process: any = localStorage.getItem("editingProcess")
             const parsedProcess: any = JSON.parse(process);
-            setProcess(parsedProcess);
             setProcessNameValue(parsedProcess.name)
         }       
     },[])
@@ -49,18 +45,11 @@ export default function ProcessModal(props: any) {
                 user: email,
             };
             const token = await getIdTokenClaims();
-            const method = props.isEdit ? 'PUT' : 'POST';
-            
-            const URI = props.isEdit && process
-                            ? `${BASE_URL}/api/processes/${process._id}`
-                            : `${BASE_URL}/api/processes`;
-                            
-            const result = await fetchData(method,JSON.stringify(processToSend),URI, token?.__raw);
+
             if (!props.isEdit) {
-                const newProcess = {...processToSend, _id: result.process_id };
-                dispatch(processActions.addProcess(newProcess))
+                dispatch(addProcess(processToSend, token?.__raw))
             } else {
-                dispatch(processActions.updateProcess({...processToSend, _id: process._id}))
+                dispatch(updateProcess(processToSend, token?.__raw))
             }
             setIsFormSending(false);
             resetProcessNameInput();

@@ -2,9 +2,9 @@ import { useAuth0 } from "@auth0/auth0-react";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { deleteProcess } from "../../store/process-actions";
 import { processActions } from "../../store/process-store";
-import { BASE_URL, ICONS } from "../../utils/constants";
-import { fetchData } from "../../utils/request_client";
+import { ICONS } from "../../utils/constants";
 import { buildDeleteConfirmationObject } from "../../utils/utils";
 import CreateApplication from "../Applications/CreateApplication";
 import SvgIcon from "../Icons/SvgIcon";
@@ -29,10 +29,8 @@ export default function ProcessPage(props: any) {
 
     const deleteProcessHandler = async () => {
         const token = await getIdTokenClaims();
-        await fetchData("DELETE",null,`${BASE_URL}/api/processes/${process._id}`, token?.__raw);
-        dispatch(processActions.deleteProcess(process._id));
+        dispatch(deleteProcess(process._id, token?.__raw));
         navigate("/");
-        
     } 
     return (
         <React.Fragment>
