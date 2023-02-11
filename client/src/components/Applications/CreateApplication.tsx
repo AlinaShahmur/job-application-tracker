@@ -5,7 +5,7 @@ import RoundButton from "../UI/RoundButton";
 import TextInput from "../UI/TextInput";
 import styles from './CreateApplication.module.css'
 import useInput from '../../hooks/useInput'
-import { dateValidator, formatDate, textValidator } from "../../utils/utils";
+import { dateValidator, formatDate, linkedinLinkValidator, textValidator } from "../../utils/utils";
 import { fetchData } from "../../utils/request_client";
 import { useSelector } from "react-redux";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -17,6 +17,8 @@ import Loader from "../UI/Loader";
 function CreateApplication(props: any) {
 
     const [isAddSourceOpen, setIsAddSourceOpen] = useState(false);
+    const [isAttachLinkChosen, setIsAttachLinkChosen] = useState(false);
+    const [isManuallySetChosen, setIsManuallySetChosen] = useState(false);
     const [isFormCASending, setIsFormCASending] = useState(false);
     const [sourceOptions, setSourceOptions] = useState<Set<string>>(new Set());
     const [isFormAddSourceSending, setIsFormAddSourceSending] = useState(false);
@@ -84,6 +86,15 @@ function CreateApplication(props: any) {
         reset: resetFile
     } = useFileInput();
 
+    const {
+        enteredValue: jobLinkValue,
+        isInputValid: isjobLinkValid,
+        hasError:  jobLinkValueHasError,
+        inputChangeHandler:  jobLinkChangeHandler,
+        inputBlurHandler:  jobLinkBlurHandler,
+        reset: resetJobLink
+    } = useInput(linkedinLinkValidator);
+
     useEffect(() => {
         
         async function fetchSources() {
@@ -101,32 +112,34 @@ function CreateApplication(props: any) {
             setSourceOptionsValue("")
         }
         
-    }, []);
+    }, [props.isEdit]);
 
     const submitFormCAHandler = async (e: SyntheticEvent) => {
         e.preventDefault();
-        console.log( isRoleValid, isDateValid, isFileValid,isSourceOptionsValid, isCompanyNameValid);
         
         if (isFormCAValid) {
             setIsFormCASending(true);
-
-            //maxWidth = 650, maxHeight = 560;
-            const imageBody = {
-                file:  fileInputValue.base64,
-                upload_preset: UPLOAD_PRESET
-            };
-                 
-            const res = await fetchData("POST", JSON.stringify(imageBody), `${CLOUDINARY_URL}`);
-            console.log("cloudinary res", res);
-            
+ 
             const body = {
-                role: roleInputValue,
+                applicationType: "byLink", 
+                jobUrl: jobLinkValue,
+                systemType: "LinkedIn",
                 start_date: dateInputValue,
                 source: sourceOptionsValue,
-                company_name: companyNameInputValue,
                 process_id:process._id,
-                img: res.secure_url
+                img: ""
             };
+            if (!isAttachLinkChosen) {
+                const imageBody = {
+                    file:  fileInputValue.base64,
+                    upload_preset: UPLOAD_PRESET
+                };
+                     
+                const res = await fetchData("POST", JSON.stringify(imageBody), `${CLOUDINARY_URL}`);
+                body.img = res.secure_url;
+            }
+
+
 
             const token = await getIdTokenClaims();
             await fetchData("POST", JSON.stringify(body), `${BASE_URL}/api/applications`, token?.__raw, process._id)
@@ -137,11 +150,16 @@ function CreateApplication(props: any) {
         }
     }
     const resetFormCAControls = () => {
-        resetRoleInput();
         resetDateInput();
-        resetFile();
-        resetSourceOptions();
-        resetCompanyNameInput();
+        if (isManuallySetChosen) {
+            resetRoleInput();
+            resetSourceOptions();
+            resetFile();
+            resetCompanyNameInput();
+        } else {
+            resetJobLink();
+        }
+
     }
 
     const chooseFileHandler = (e: any) => {
@@ -193,7 +211,7 @@ function CreateApplication(props: any) {
     const fileUploadBtnLabel = fileInputValue.name ? fileInputValue.name : "Choose File";
 
     let formCAClasses = isFormCASending ? '_sending' : "";
-    let isFormCAValid = isRoleValid && isDateValid && isFileValid && isSourceOptionsValid && isCompanyNameValid;
+    let isFormCAValid = isAttachLinkChosen ? (isDateValid && isjobLinkValid) : (isRoleValid && isDateValid && isFileValid && isSourceOptionsValid && isCompanyNameValid);
 
     let formAddSourceClasses = isFormAddSourceSending ? '_sending' : "";
     let isFormAddSourceValid = isSourceNameValid;
@@ -222,17 +240,30 @@ function CreateApplication(props: any) {
                                     </select>
                                 : <span className="small-text-note">You have no sources yet. Click on "+" to create one</span>
 
-    const createApplicationForm = (
-        <form onSubmit={submitFormCAHandler} className= {`${styles["create-app-form"]} ${formCAClasses}`} >
-                <h3>{props.isEdit ? "Edit" : "Create New"} Application</h3>
+    const inititalLayout = <div className={styles["btns-initial"]}>
+        <h3>Choose the application creation way</h3>
+        <button className={styles["btn-attach-link"]} onClick = {() => setIsAttachLinkChosen(true)}>Attach Link</button>
+        <button className={styles["btn-set-manually"]} onClick = {() => setIsManuallySetChosen(true)}>Set Manually</button>
+    </div>
+
+    const createApplicationFormContent = isAttachLinkChosen ? (
+        <TextInput
+            id = "linkedinJobLink"
+            label = "Link to Job Description in Linkedin"
+            type = "text"
+            value = {jobLinkValue}
+            onChange = {jobLinkChangeHandler}
+            hasError = {jobLinkValueHasError}
+            onBlur = {jobLinkBlurHandler}
+        />) : (   <>
                 <TextInput 
-                        id = "roleInput"
-                        label = "Role"
-                        type = "text"
-                        value = {roleInputValue}
-                        onChange = {roleInputChangeHandler}
-                        hasError = {roleHasError}
-                        onBlur = {roleInputBlurHandler}
+                            id = "roleInput"
+                            label = "Role"
+                            type = "text"
+                            value = {roleInputValue}
+                            onChange = {roleInputChangeHandler}
+                            hasError = {roleHasError}
+                            onBlur = {roleInputBlurHandler}
                 />
 
                 <TextInput 
@@ -245,12 +276,8 @@ function CreateApplication(props: any) {
                         hasError = {companyHasError}
                         onBlur = {companyNameInputBlurHandler}
                 />
-                <div className={`${styles["form-group"]} ${dateHasError ?  "invalid" : ""}`}>
-                    <label htmlFor="startDateInput">When did you send a CV</label> <br></br>
-                    <input type = "date" id = "startDateInput" max={formatDate(new Date())} onChange={dateInputChangeHandler} onBlur = {dateInputBlurHandler} value = {dateInputValue}></input>
-                </div>
+                
 
-     
                 <div className={`${styles["form-group"]} ${hasInputFileErrors ?  "invalid" : ""}`}>
 
                     <p>Upload a job description</p>
@@ -275,10 +302,37 @@ function CreateApplication(props: any) {
                     </div>
 
                 </div>    
+            </>
+    )
+
+    
+    const createApplicationForm = (!isAttachLinkChosen && !isManuallySetChosen) ?  
+            inititalLayout :
+            <form onSubmit={submitFormCAHandler} className= {`${styles["create-app-form"]} ${formCAClasses}`} >
+                <RoundButton 
+                    onClick = {() => { 
+                        setIsAttachLinkChosen(false) 
+                        setIsManuallySetChosen(false)
+                    }}
+                    background = "#FFFFFF" 
+                    color = "#8a996c" 
+                    path = {ICONS.path.arrows.left}
+                    viewBox = {ICONS.viewBox.arrows}
+                /> 
+                <h3>{props.isEdit ? "Edit" : "Create New"} Application</h3>
+               
+                {createApplicationFormContent}
+
+                <div className={`${styles["form-group"]} ${dateHasError ?  "invalid" : ""}`}>
+                    <label htmlFor="startDateInput">When did you send a CV</label> <br></br>
+                    <input type = "date" id = "startDateInput" max={formatDate(new Date())} onChange={dateInputChangeHandler} onBlur = {dateInputBlurHandler} value = {dateInputValue}></input>
+                </div>
+
                 <button type="submit">Create Application</button>
             
-            </form>
-    )
+            </form> 
+     
+    
     const addSourceForm = addNewSourceLoading ? <Loader size = {5}/> :(
             <div>
                 <form onSubmit={submitFormAddResourceHandler} className = {`${styles["add-source-form"]} ${formAddSourceClasses}`}>
@@ -303,6 +357,7 @@ function CreateApplication(props: any) {
                 </form>
             </div>
     )
+
     return (
         <Modal onClose = {props.onClose}>
             {isAddSourceOpen 

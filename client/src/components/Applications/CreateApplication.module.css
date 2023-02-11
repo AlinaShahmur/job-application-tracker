@@ -29,3 +29,18 @@
 .add-source-form {
     text-align: center;
 }
+
+.btns-initial {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-attach-link {
+    background-color: #ad84df;
+}
+
+.btn-set-manually {
+    background-color: #8a996c;
+}

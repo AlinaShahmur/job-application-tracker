@@ -1,5 +1,5 @@
 import { FileObject } from "../types";
-import {  FILE_INPUT_MESSAGES, MIN_JOB_DESC_SIZE, PERMITTED_IMG_FORMATS } from "./constants";
+import {  FILE_INPUT_MESSAGES, LINKEDIN_LINK_VALID_PATTERN, MIN_JOB_DESC_SIZE, PERMITTED_IMG_FORMATS } from "./constants";
 
 const pretiffyDate = (date: any) => {
     const dateObj = new Date(date);
@@ -76,6 +76,10 @@ const buildDeleteConfirmationObject = (subject: string) => {
     }
 }
 
+const linkedinLinkValidator = (value: string) =>  {
+    return new RegExp(LINKEDIN_LINK_VALID_PATTERN).test(value);
+}
+
 export {
     pretiffyDate,
     inputDebouncer, 
@@ -87,5 +91,6 @@ export {
     formatDate,
     dateValidator,
     calculateImageSize,
-    buildDeleteConfirmationObject
+    buildDeleteConfirmationObject,
+    linkedinLinkValidator
 }
