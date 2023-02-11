@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import cron from 'cron';
 import dotenv from 'dotenv';
@@ -13,6 +13,7 @@ import path from 'path';
 
 import { updateStatus } from './utils/dbOperations';
 import { auth } from './middlewares/auth';
+import { HttpError } from './error-handling/HttpError';
 
 dotenv.config();
 
@@ -30,8 +31,13 @@ app.use(cors());
 
 app.use('/api/applications',auth, applicationRouter);
 app.use('/api/users', auth, userRouter);
-app.use('/api/processes', auth, processRouter);
-app.use('/api/sources', auth, sourcesRouter);
+app.use('/api/processes',auth, processRouter);
+app.use('/api/sources',auth, sourcesRouter);
+
+app.use((error: HttpError, req: Request, res: Response, next: NextFunction) => {
+    error.printMessage();
+    error.sendResponse(res);
+})
 
 if (process.env.NODE_ENV === 'production') {
     app.use('/', express.static(path.join(__dirname, '..', 'client', 'build')));

@@ -2,20 +2,22 @@ import Application from "../db/classes/Application";
 import Process from "../db/classes/Process";
 import { Source } from "../db/classes/Source";
 import User from "../db/classes/User";
+import { HttpError } from "../error-handling/HttpError";
+import { responseWrapper } from "../utils/responseWrapper";
 
-export const getProcessesByUserEmail = async (req, res) =>{
+export const getProcessesByUserEmail = async (req, res, next) =>{
     try {
         const {userEmail} = req.params;
         const query = {user: userEmail}
         const processes = await Process.find(query);
-        res.send({success: true, data: processes})
-    } catch (error) {
-        console.log("Error in getProcesses", error);
-        res.send({success: false, data: error.message})
+
+        responseWrapper(res, 200, processes);
+    } catch (err) {
+        return next(new HttpError(err.message, 500, "getProcessesByUserEmail")); 
     }
 }
 
-export const createProcess = async (req, res) =>{
+export const createProcess = async (req, res, next) =>{
     try {
         const newProcess = req.body;
         
@@ -27,29 +29,27 @@ export const createProcess = async (req, res) =>{
         const result = await createdProcess.create();
         await User.attachNewProcess(newProcess.user, result.insertedId);
 
-        res.send({success: true, data: {process_id: result.insertedId}})
-    } catch (error) {
-        console.log("Error in getProcesses", error);
-        res.status(500).send({success: false, data: error.message})
+        responseWrapper(res, 200, {process_id: result.insertedId});
+    } catch (err) {
+        return next(new HttpError(err.message, 500, "createProcess")); 
     }
 }
 
-export const updateProcess = async (req, res) =>{
+export const updateProcess = async (req, res, next) =>{
     try {
 
         const process = req.body;
         const { process_id } = req.params
 
-        await Process.update(process_id, process);
+        await Process.update(process_id, {name: process.name});
+        responseWrapper(res, 200, {});
 
-        res.send({success: true})
-    } catch (error) {
-        console.log("Error in getProcesses", error);
-        res.status(500).send({success: false, data: error.message})
+    } catch (err) {   
+        return next(new HttpError(err.message, 500, "updateProcess")); 
     }
 }
 
-export const deleteProcess = async (req, res) => {
+export const deleteProcess = async (req, res, next) => {
     try {
         const { process_id } = req.params;
         const result = await Process.deleteOne(process_id);
@@ -59,10 +59,9 @@ export const deleteProcess = async (req, res) => {
             await Source.deleteSourceObjectByProcessId(process_id)
         }
 
-        res.send({success: true})
-    } catch (error) {
-        console.log("Error in deleteProcess", error);
-        res.status(500).send({success: false, data: error.message})
+        responseWrapper(res, 200, {});
+    } catch (err) {
+        return next(new HttpError(err.message, 500, "deleteProcess")); 
     }
 }
 

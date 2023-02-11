@@ -50,11 +50,11 @@ class Application {
     }
     async create() {
         try {
-            const createdApplication = await mongo
+            return await mongo
                                                 .db
                                                 .collection(DB_COLLECTIONS.APPLICATIONS)
                                                 .insertOne(this);
-            return createdApplication.insertedId;
+            
 
         } catch (err) {
             console.error(err);
@@ -67,7 +67,7 @@ class Application {
             return await mongo
                             .db
                             .collection(DB_COLLECTIONS.APPLICATIONS)
-                            .updateOne({_id:  new ObjectId(id)},{$set: obj})
+                            .updateOne({_id:  id},{$set: obj})
 
         } catch (err) {
             console.error(err);

@@ -18,4 +18,14 @@ export const sortTypes = {
     desc: {'start_date': -1}
 }
 
+export const JOB_PARAMETERS_SELECTORS = {
+    role: ".top-card-layout__title",
+    company_name: ".topcard__org-name-link",
+    location: ".topcard__flavor--bullet.topcard__flavor"
+}
+
+export const firstStageName = "CV was sent";
+
+export enum ApplicationTypes {BY_LINK = "byLink"}
+
 export const fieldsForQuery = ['role', 'company_name']

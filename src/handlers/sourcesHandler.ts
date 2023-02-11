@@ -1,21 +1,23 @@
 import { ObjectId } from "mongodb";
 import Application from "../db/classes/Application";
 import { Source } from "../db/classes/Source";
+import { HttpError } from "../error-handling/HttpError";
+import { responseWrapper } from "../utils/responseWrapper";
 
-export async function getAllSources(req,res) {
+export async function getAllSources(req, res, next) {
     try {
         const process_id = req.headers["process_id"];
         const source = new Source();
         source.process_id = new ObjectId(process_id);
         const data = await source.getAll();
-        res.send({success: true, data});
+
+        responseWrapper(res, 200, data);
     } catch(err) {
-        console.log("Error in getAllSources", err);
-        res.status(500).send({success: false, data: [], message: err});
+        return next(new HttpError(err.message, 500, "getAllSources")); 
     }
 }
 
-export async function getSourcesPercentages(req, res) {
+export async function getSourcesPercentages(req, res, next) {
     try {
         
         const process_id = req.headers["process_id"];
@@ -45,14 +47,13 @@ export async function getSourcesPercentages(req, res) {
                                         : 0
         }
 
-        res.send({success: true, data: {percentage: sources}})
+        responseWrapper(res, 200, {percentage: sources});
     } catch(err) {
-        console.log("Error in getSourcesPercentages", err);
-        res.status(500).send({success: false, data: [], message: err});
+        return next(new HttpError(err.message, 500, "getSourcesPercentages")); 
     }
 }
 
-export async function addNewSource(req, res) {
+export async function addNewSource(req, res, next) {
     try {
 
         const { source_name } = req.body;
@@ -61,11 +62,9 @@ export async function addNewSource(req, res) {
         const process_id = req.headers["process_id"];
         source.process_id = new ObjectId(process_id);
         
-        const status = await source.pushNewSource(source_name);
-        
-        res.send({success: true, data: [], message: "Successfully added"})
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({success: false, data: [], message: error});
+        await source.pushNewSource(source_name);
+        responseWrapper(res, 201, {});
+    } catch (err) {
+        return next(new HttpError(err.message, 500, "addNewSource")); 
     }
 }
