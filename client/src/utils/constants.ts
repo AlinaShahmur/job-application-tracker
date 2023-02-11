@@ -1,5 +1,5 @@
 //export const BASE_URL = 'http://localhost:8000' //in dev mode
-export const BASE_URL = '' //in prod mode
+ export const BASE_URL = '' //in prod mode
 
 export const REDIRECT_URL = "https://jobs-applications-tracker.herokuapp.com/";
 //export const REDIRECT_URL = "https://86ce-77-137-68-89.eu.ngrok.io";
@@ -9,6 +9,8 @@ export const STATUS_AND_COLORS: any = {
     pending: '#f0efb1',
     rejected: '#d68787'
 }
+
+export const LINKEDIN_LINK_VALID_PATTERN = 'linkedin.com/jobs/view/'
 
 export const ICONS = {
     viewBox: {
