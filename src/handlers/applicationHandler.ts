@@ -1,12 +1,14 @@
 import  Application  from "../db/classes/Application";
-import { Request, Response } from "express";
-import { fieldsForQuery, STATUS } from "../utils/constants";
+import { NextFunction, Request, Response } from "express";
+import { ApplicationTypes, fieldsForQuery, firstStageName, STATUS } from "../utils/constants";
 import { buildMongoQuery, buildSortQuery } from "../utils/dbOperations";
 import { StageDoc } from "../types";
 import { ObjectId } from 'mongodb';
+import { scrapPage } from "../utils/scrapLogic";
+import { HttpError } from "../error-handling/HttpError";
+import { responseWrapper } from "../utils/responseWrapper";
 
-
-export async function getAllItems(req: Request,res: Response) {
+export async function getAllItems(req: Request,res: Response, next: NextFunction) {
     try {
         const process_id: any = req.headers["process_id"];
 
@@ -14,14 +16,13 @@ export async function getAllItems(req: Request,res: Response) {
         application.process_id = new ObjectId(process_id);
         const promises = [application.findAll(), application.getTotalCount({})];
         const [applications, totalItems] = await Promise.all(promises);
-
-        res.send({success: true, data: {applications, totalItems}})
+        responseWrapper(res, 200, {applications, totalItems});
     } catch(err) {
-        res.send({success: false, data: [], message: err})
+        return next(new HttpError(err.message, 500, "getAllItems")); 
     }
 }
 
-export async function getPaginatedItems(req: Request,res: Response) {
+export async function getPaginatedItems(req: Request,res: Response, next: NextFunction) {
     try {
         const process_id: any = req.headers["process_id"];
 
@@ -36,13 +37,13 @@ export async function getPaginatedItems(req: Request,res: Response) {
         const promises = [application.getTotalCount(searchQuery), application.find(limit, skip, searchQuery, sortQuery)];
         const [totalItems, applications] = await Promise.all(promises);
 
-        res.send({success: true, data: { applications, totalItems }})
+        responseWrapper(res, 200, {applications, totalItems});
     } catch (err){
-        res.send({success: false, data: [], message: err})
+        return next(new HttpError(err.message, 500, "getPaginatedItems")); 
     }
 }
 
-export async function getApplicationsByStatuses(req: Request, res: Response) {
+export async function getApplicationsByStatuses(req: Request, res: Response, next: NextFunction) {
     try {
         const process_id: any = req.headers["process_id"];
 
@@ -53,15 +54,23 @@ export async function getApplicationsByStatuses(req: Request, res: Response) {
         const rejected = applications.filter(application => application.status === 'rejected').length;
         const pending = applications.filter(application => application.status === 'pending').length;
 
-        res.send({success: true, data: { rejected, pending }})
+        responseWrapper(res, 200, {rejected, pending});
     } catch (err) {
-        res.send({success: false, data: [], message: err})
+        return next(new HttpError(err.message, 500, "getApplicationsByStatuses")); 
     }
 }
 
-export async function createApplication(req: Request,res: Response) {
+export async function createApplication(req: Request,res: Response, next: NextFunction) {
     try {
-        const application = req.body;
+        let application = req.body;
+
+        if (application.applicationType == ApplicationTypes.BY_LINK) {
+            const { jobUrl } = application;
+            const result = await scrapPage(jobUrl);
+            application = Object.assign(application, result);
+        }
+        console.log(application);
+        
         const app = new Application();
 
         app.role = application.role;
@@ -74,7 +83,7 @@ export async function createApplication(req: Request,res: Response) {
 
         const initialStage: StageDoc = {
             date: application.start_date,
-            stage_name: "CV was sent"
+            stage_name: firstStageName
         };
 
         const history = [];
@@ -83,14 +92,14 @@ export async function createApplication(req: Request,res: Response) {
         app.history = history;
 
         const result = await app.create();
-
-        res.send({success: true, data: {application_id: result.insertedId}, message: "created"});
+        console.log({result});
+        
+        responseWrapper(res, 201, {application_id: result.insertedId});
     } catch (err){
-        console.error("Error in createApplication", err)
-        res.status(500).send({success: false, data: [], message: err});
+        return next(new HttpError(err.message, 500, "createApplication")); 
     }
 }
-export async function updateApplication(req: Request,res: Response){
+export async function updateApplication(req: Request,res: Response, next: NextFunction){
     try {
         const application = req.body;
         
@@ -102,22 +111,20 @@ export async function updateApplication(req: Request,res: Response){
             application.start_date = new Date(application.start_date)
         }
         await Application.update(id, application);
-        
-        res.send({success: true, data: 'updated'})
+        responseWrapper(res, 200, {});
     } catch (err){
-        res.send({success: false, data: [], message: err})
+        return next(new HttpError(err.message, 500, "updateApplication")); 
     }
 }
 
 
-export async function deleteApplication(req: Request,res: Response) {
+export async function deleteApplication(req: Request,res: Response, next: NextFunction) {
     try {
         const {id} = req.params;
 
-        const status = await Application.deleteById(id);
-         console.log({status});
-        res.send({success: true, data: 'Deleted'})
+        await Application.deleteById(id);
+        responseWrapper(res, 200, {});
     } catch (err){
-        res.send({success: false, data: [], message: err})
+        return next(new HttpError(err.message, 500, "deleteApplication"));
     }
 }

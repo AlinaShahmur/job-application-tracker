@@ -30,3 +30,7 @@ export interface HistoryDoc {
     application_id: string;
     history: StageDoc[];
 }
+
+export enum systemTypes { 
+    LINKEDIN = "LinkedIn"
+ };
