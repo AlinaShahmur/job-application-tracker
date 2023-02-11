@@ -1,27 +1,47 @@
-import { useAuth0 } from '@auth0/auth0-react';
-import { useEffect } from 'react';
 import './App.css';
-import {ProcessesPage} from './components/Processes/ProcessesPage';
-import { BASE_URL } from './utils/constants';
+import { Outlet, RouterProvider } from 'react-router';
+import { createBrowserRouter } from 'react-router-dom';
+import ProtectedRoute from './auth/protected-route';
+import Application from './components/Applications/Application';
+import Applications from './components/Applications/Applications';
+import ProfilePage from './components/Applications/ProfilePage';
+import Dashboard from './components/Dashboard/Dashboard';
+import ProcessPage from './components/Processes/ProcessPage';
 import ErrorBoundary from './utils/error-boundary';
-import { fetchData } from './utils/request_client';
+import Auth0ProviderWithHistory from './auth/auth0-provider-with-history';
+import Header from './components/Header/Header';
+import Main from './components/Processes/Main';
+
+const RootLayout = () => (
+  <Auth0ProviderWithHistory>
+    <Header/>
+    <Outlet/>
+  </Auth0ProviderWithHistory>
+)
+
+const router = createBrowserRouter([
+  {
+    element: <RootLayout/>, 
+    children: [
+      {path: "/", element: <ProtectedRoute component = {Main}/>},
+      {path: "/profile", element: <ProtectedRoute component = {ProfilePage}/>},
+      {path: "/:processId", element: <ProtectedRoute component = {ProcessPage}/>},
+      {path: '/:processId/dashboard', element: <ProtectedRoute component = {Dashboard}/>},
+      {path: '/:processId/applications', element: <ProtectedRoute component = {Applications}/>},
+      {path: '/:processId/applications/:id', element: <ProtectedRoute component = {Application}/>},
+    ]
+  }
+])
+
+
 
 function App() {
-  const { user, getIdTokenClaims  }: any = useAuth0();
-  useEffect(() => {
-    const createUserIfNeed = async function(email: string) {
-      const token: any = await getIdTokenClaims();
-      await fetchData('GET',null, `${BASE_URL}/api/users/${email}`, token.__raw);
-    }
-    createUserIfNeed(user.email);
-  })
   return (
-    <ErrorBoundary>
-      <div className="app">
-        <ProcessesPage/>
-      </div>
-    </ErrorBoundary>
+      <ErrorBoundary>
+        <RouterProvider router={router}/>
+      </ErrorBoundary>
   );
 }
+
 
 export default App;
