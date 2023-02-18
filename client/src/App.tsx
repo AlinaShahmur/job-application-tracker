@@ -4,7 +4,6 @@ import { createBrowserRouter } from 'react-router-dom';
 import ProtectedRoute from './auth/protected-route';
 import Application from './components/Applications/Application';
 import Applications from './components/Applications/Applications';
-import ProfilePage from './components/Applications/ProfilePage';
 import Dashboard from './components/Dashboard/Dashboard';
 import ProcessPage from './components/Processes/ProcessPage';
 import ErrorBoundary from './utils/error-boundary';
@@ -24,7 +23,6 @@ const router = createBrowserRouter([
     element: <RootLayout/>, 
     children: [
       {path: "/", element: <ProtectedRoute component = {ProcessesPage}/>},
-      {path: "/profile", element: <ProtectedRoute component = {ProfilePage}/>},
       {path: "/:processId", element: <ProtectedRoute component = {ProcessPage}/>},
       {path: '/:processId/dashboard', element: <ProtectedRoute component = {Dashboard}/>},
       {path: '/:processId/applications', element: <ProtectedRoute component = {Applications}/>},
