@@ -10,7 +10,7 @@ import ProcessPage from './components/Processes/ProcessPage';
 import ErrorBoundary from './utils/error-boundary';
 import Auth0ProviderWithHistory from './auth/auth0-provider-with-history';
 import Header from './components/Header/Header';
-import Main from './components/Processes/Main';
+import { ProcessesPage } from './components/Processes/ProcessesPage';
 
 const RootLayout = () => (
   <Auth0ProviderWithHistory>
@@ -23,7 +23,7 @@ const router = createBrowserRouter([
   {
     element: <RootLayout/>, 
     children: [
-      {path: "/", element: <ProtectedRoute component = {Main}/>},
+      {path: "/", element: <ProtectedRoute component = {ProcessesPage}/>},
       {path: "/profile", element: <ProtectedRoute component = {ProfilePage}/>},
       {path: "/:processId", element: <ProtectedRoute component = {ProcessPage}/>},
       {path: '/:processId/dashboard', element: <ProtectedRoute component = {Dashboard}/>},
@@ -32,8 +32,6 @@ const router = createBrowserRouter([
     ]
   }
 ])
-
-
 
 function App() {
   return (
