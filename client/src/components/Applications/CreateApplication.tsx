@@ -121,7 +121,7 @@ function CreateApplication(props: any) {
             setIsFormCASending(true);
  
             const body = {
-                applicationType: "byLink", 
+                applicationType: isAttachLinkChosen ? "byLink" : "manually", 
                 jobUrl: jobLinkValue,
                 systemType: "LinkedIn",
                 start_date: dateInputValue,
