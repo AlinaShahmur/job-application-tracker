@@ -122,6 +122,8 @@ function CreateApplication(props: any) {
  
             const body = {
                 applicationType: isAttachLinkChosen ? "byLink" : "manually", 
+                company_name: isAttachLinkChosen ? "" : companyNameInputValue,
+                role: isAttachLinkChosen ? "" : roleInputValue,
                 jobUrl: jobLinkValue,
                 systemType: "LinkedIn",
                 start_date: dateInputValue,
