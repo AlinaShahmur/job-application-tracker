@@ -67,7 +67,7 @@ class Application {
             return await mongo
                             .db
                             .collection(DB_COLLECTIONS.APPLICATIONS)
-                            .updateOne({_id:  id},{$set: obj})
+                            .updateOne({_id:  new ObjectId(id)},{$set: obj})
 
         } catch (err) {
             console.error(err);
