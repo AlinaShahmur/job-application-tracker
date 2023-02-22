@@ -41,13 +41,20 @@ button:hover, a:hover {
   opacity: 0.8;
 }
 
-input {
+input, select {
   outline: none;
   border: 1px solid #ccc;
-  padding: 3px;
+  border-radius: 5px;
+  padding: 2px;
+  margin: 5px;
+  font-size: 14px;
 }
 input:focus {
   opacity: 0.6;
+}
+
+select:hover {
+  cursor: pointer;
 }
 
 code {
@@ -82,14 +89,6 @@ form._sending::after {
   visibility: visible;
 }
 
-.input {
-  margin: 15px;
-}
-
-.input label {
-  display: inline-block;
-  margin-bottom: 10px;
-}
 
 .small-text-note {
   font-size: 14px;

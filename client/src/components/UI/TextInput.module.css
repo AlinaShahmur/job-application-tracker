@@ -1,7 +1,8 @@
 
-.input-container input {
-    padding: 2px;
-    margin: 15px;
+
+.input-container label {
+    display: inline-block;
+    margin: 5px;
 }
 
 .invalid {

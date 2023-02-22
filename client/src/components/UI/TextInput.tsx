@@ -1,9 +1,9 @@
-
+import classes from "./TextInput.module.css";
 
 export default function TextInput(props: any) {
 
     return (
-        <div className = {`${props.className} input ${props.hasError ? "invalid" : ""}`}>
+        <div className = {`${props.className} ${classes["input-container"]} ${props.hasError ? "invalid" : ""}`}>
             <label htmlFor={props.id}> 
                 {props.label}
             </label> <br></br>
