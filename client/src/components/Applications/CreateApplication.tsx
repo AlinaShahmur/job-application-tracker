@@ -236,7 +236,7 @@ function CreateApplication(props: any) {
 
     const sourceList = renderSourceList(sourceOptions);
     const sourcesDropdown = sourceOptions.size > 0 
-                                ? <select id="optionsDropdown" className='dropdown' onChange={sourceOptionsChangeHandler} onBlur = {sourceOptionsBlurHandler} value = {sourceOptionsValue}>
+                                ? <select id="optionsDropdown" className={styles["sources-dropdown"]} onChange={sourceOptionsChangeHandler} onBlur = {sourceOptionsBlurHandler} value = {sourceOptionsValue}>
                                         <option value = ""></option>
                                         {sourceList}
                                     </select>
