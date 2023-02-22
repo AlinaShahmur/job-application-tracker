@@ -4,8 +4,9 @@ import { useDispatch } from "react-redux";
 import Processes from "./Processes";
 import ProcessModal from "./ProcessModal";
 import classes from './ProcessesPage.module.css';
-import ErrorBoundary from "../../utils/error-boundary";
 import { getProcesses } from "../../store/process-actions";
+import { BASE_URL } from "../../utils/constants";
+import { fetchData } from "../../utils/request_client";
 
 let isProcessesFetched = false;
 
@@ -17,7 +18,7 @@ export const ProcessesPage: React.FC = () => {
     useEffect(() => {
       const fetchProcesses = async function() {
         const token: any = await getIdTokenClaims();
-        
+        await fetchData('GET', null, `${BASE_URL}/api/users/${user.email}`, token.__raw);
         if (!isProcessesFetched) {
 
           isProcessesFetched = true;
@@ -25,10 +26,9 @@ export const ProcessesPage: React.FC = () => {
         }
       }
       fetchProcesses();
-    },[]);
+    },[user]);
 
     return (
-      <ErrorBoundary>
         <div className={classes['process-page']}>
             <h1>Welcome, {user.name}</h1>
             <h3>My opened job search processes:</h3>
@@ -36,6 +36,5 @@ export const ProcessesPage: React.FC = () => {
             {isCreateProcessShow && <ProcessModal isEdit = {false} onClose = {() =>  setIsCreateProcessShow(false)}/>}
             <button className={classes['create-new-btn']} onClick={() => setIsCreateProcessShow(true)}>Create New</button>
         </div>
-        </ErrorBoundary>
     )
 }

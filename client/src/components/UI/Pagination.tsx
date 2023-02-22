@@ -8,7 +8,7 @@ function Pagination(props: any) {
 
     useEffect(() => {
         props.passParameters(currentPage);
-    },[currentPage]);
+    },[currentPage, props]);
 
     useEffect(() =>{
         setCurrentPage(props.currPage)

@@ -11,7 +11,7 @@ function Header() {
     const [isProfileDropdownShown, setIsProfileDropdownShown] = useState(false);
     useEffect(() => {
         if (isProfileDropdownShown) setIsProfileDropdownShown(false)
-    },[location])
+    },[location, isProfileDropdownShown])
     return (
         <nav className = {classes.navbar}>
             <div className={classes.logo}>
