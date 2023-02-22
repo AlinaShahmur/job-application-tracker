@@ -1,12 +1,10 @@
+import React from "react";
 import { useSelector } from "react-redux";
-import ErrorBoundary from "../../utils/error-boundary";
 import Process from "./Process";
 
-export default function Processes(props: any) {
+const Processes = React.memo(() => {
     const processes: any = useSelector((state: any) => state.process.processes);
-    
     return (
-        <ErrorBoundary>
         <ul>
             {processes.map((process: any) => (
                 <Process 
@@ -15,6 +13,7 @@ export default function Processes(props: any) {
                 />
             ))}
         </ul>
-        </ErrorBoundary>
     )
-}
+})
+
+export default Processes
