@@ -19,12 +19,8 @@ export default function useFileInput() {
     let checkValidityResult =  fileValidator(file.value)                                       
     let isInputValid = checkValidityResult.success;
     let hasInputFileErrors = !isInputValid && file.touched;
-    console.log({isInputValid});
-    
 
     let errorMessage = checkValidityResult.error;
-    console.log({errorMessage});
-    
 
     const setValue = (value: FileObject) => {
         setFile({value: value, touched: false});
