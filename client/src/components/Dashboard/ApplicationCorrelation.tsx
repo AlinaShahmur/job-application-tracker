@@ -5,6 +5,7 @@ import * as V from 'victory'
 import { VictoryBar } from 'victory';
 import { BASE_URL } from '../../utils/constants';
 import { fetchData } from '../../utils/request_client';
+import Card from '../UI/Card';
 
 export default function ApplicationCorrelation() {
     const { getIdTokenClaims } = useAuth0();
@@ -30,7 +31,7 @@ export default function ApplicationCorrelation() {
                                                     label = 'Sources'
                                                     style={{
                                                         axisLabel: { padding: 36 },
-                                                        tickLabels: { padding: 8, fontSize: 8 }
+                                                        tickLabels: { padding: 8, fontSize:8 }
                                                     }}
                                                 />
                                                 <V.VictoryAxis
@@ -58,8 +59,10 @@ export default function ApplicationCorrelation() {
     return (
         <div>
             <div className = 'dashboard__item'>
+                <Card>
                 <h3>The correlation between total amount of applications and applications with response in the "Source" context </h3>
                 {withResponseDashboardContent}
+                </Card>
             </div>
         </div>
     )

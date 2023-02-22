@@ -6,11 +6,36 @@
 }
 
 .dashboard__item {
-    width: 50%;
+    width: 80%;
 }
 
 .dashboard-diagrams {
     display: grid;
     grid-template-columns: auto auto;
+    gap: 20px;
     margin: 50px;
+}
+
+@media screen and (max-width: 1024px) {
+    .dashboard-diagrams {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+    }
+    .dashboard__item {
+        margin: auto;
+    }
+}
+
+@media screen and (min-width: 1201px) {
+
+    .dashboard__item {
+        width: 600px;
+    }
+    .dashboard-diagrams {
+        gap: 100px;
+
+    }
 }
